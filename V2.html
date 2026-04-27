@@ -1,999 +1,1508 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-theme="light" lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>VectisX — Browser</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VectisX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
-
-:root {
-  /* Core palette — warm pearl light */
-  --bg:        #f2f0eb;
-  --surface:   rgba(255,255,255,0.72);
-  --surface2:  rgba(255,255,255,0.5);
-  --surface3:  rgba(255,255,255,0.9);
-  --glass:     rgba(242,240,235,0.6);
-
-  --border:    rgba(0,0,0,0.07);
-  --border2:   rgba(0,0,0,0.12);
-  --border3:   rgba(0,0,0,0.05);
-
-  /* Text */
-  --txt:       #1a1814;
-  --txt2:      #6b6660;
-  --txt3:      #a09b96;
-
-  /* Accent — warm indigo */
-  --accent:    #4a3fe0;
-  --accent2:   #7c6ff7;
-  --accent-s:  rgba(74,63,224,0.1);
-  --accent-s2: rgba(74,63,224,0.06);
-
-  /* Status */
-  --green:     #16a34a;
-  --green-s:   rgba(22,163,74,0.1);
-  --amber:     #d97706;
-  --amber-s:   rgba(217,119,6,0.1);
-  --red:       #dc2626;
-
-  /* Orange for wrapper */
-  --orange:    #ea580c;
-  --orange-s:  rgba(234,88,12,0.08);
-
-  --radius:    14px;
-  --radius-sm: 9px;
-  --radius-xs: 6px;
-  --blur:      20px;
-  --font:      'Geist', sans-serif;
-  --serif:     'Instrument Serif', serif;
-  --mono:      'Geist Mono', monospace;
+/* ── CSS Variables ─────────────────────────────────────── */
+:root,[data-theme="light"]{
+  --bg:#f2f0eb;--surface:#e8e5de;--surface2:#dedad2;--surface3:#d4cfc6;
+  --glass:rgba(242,240,235,.88);--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.12);
+  --border3:rgba(0,0,0,.18);--txt:#1a1916;--txt2:#4a4843;--txt3:#7a7874;
+  --accent:#4a3fe0;--accent2:#6557e8;--accent-s:rgba(74,63,224,.12);
+  --accent-s2:rgba(74,63,224,.22);--green:#16a34a;--green-s:rgba(22,163,74,.12);
+  --amber:#d97706;--amber-s:rgba(217,119,6,.12);--orange:#ea580c;
+  --orange-s:rgba(234,88,12,.12);--shadow:0 2px 16px rgba(0,0,0,.10);
+  --shadow2:0 4px 32px rgba(0,0,0,.14);--r:10px;--r2:7px;--r3:5px;
+  --tl-red:#ff5f57;--tl-yellow:#febc2e;--tl-green:#28c840;
+}
+[data-theme="dark"]{
+  --bg:#141210;--surface:#1e1b18;--surface2:#252220;--surface3:#2d2a27;
+  --glass:rgba(20,18,16,.90);--border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.10);--border3:rgba(255,255,255,.16);
+  --txt:#f0ede8;--txt2:#a8a49e;--txt3:#6e6a64;
+  --accent:#6c5fe0;--accent2:#8474e8;--accent-s:rgba(108,95,224,.16);
+  --accent-s2:rgba(108,95,224,.26);--green:#22c55e;--green-s:rgba(34,197,94,.14);
+  --amber:#f59e0b;--amber-s:rgba(245,158,11,.14);--orange:#f97316;
+  --orange-s:rgba(249,115,22,.14);--shadow:0 2px 20px rgba(0,0,0,.30);
+  --shadow2:0 4px 40px rgba(0,0,0,.40);
+}
+[data-theme="crimson"]{
+  --bg:#120606;--surface:#1c0808;--surface2:#240b0b;--surface3:#2c0e0e;
+  --glass:rgba(18,6,6,.90);--border:rgba(200,28,28,.18);
+  --border2:rgba(200,28,28,.26);--border3:rgba(200,28,28,.36);
+  --txt:#f5e8e8;--txt2:#c49090;--txt3:#7a5050;
+  --accent:#c81c1c;--accent2:#e02424;--accent-s:rgba(200,28,28,.16);
+  --accent-s2:rgba(200,28,28,.28);--green:#22c55e;--green-s:rgba(34,197,94,.14);
+  --amber:#f59e0b;--amber-s:rgba(245,158,11,.14);--orange:#f97316;
+  --orange-s:rgba(249,115,22,.14);--shadow:0 2px 20px rgba(200,28,28,.18);
+  --shadow2:0 4px 40px rgba(200,28,28,.28);
+  --tl-red:#c81c1c;--tl-yellow:#c87a1c;--tl-green:#1c7a1c;
 }
 
-/* ── PAGE ── */
-body {
-  font-family: var(--font);
-  background: linear-gradient(135deg, #e8e4dd 0%, #ede9e2 40%, #e4dfd8 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px;
+/* ── Reset & Base ──────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Geist',system-ui,sans-serif;
+  background:var(--bg);color:var(--txt);transition:background .3s ease,color .3s ease}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+input{font-family:inherit;outline:none;border:none}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:10px}
+
+/* ── App Layout ────────────────────────────────────────── */
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  animation:shellAppear .45s cubic-bezier(.22,1,.36,1) both}
+@keyframes shellAppear{
+  from{opacity:0;transform:scale(.97) translateY(8px)}
+  to{opacity:1;transform:none}
 }
 
-/* ── BROWSER SHELL ── */
-#shell {
-  width: 100%;
-  max-width: 1120px;
-  height: 740px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--bg);
-  box-shadow:
-    0 1px 0 0 rgba(255,255,255,0.8) inset,
-    0 0 0 1px var(--border2),
-    0 32px 80px rgba(0,0,0,0.16),
-    0 8px 24px rgba(0,0,0,0.08);
-  position: relative;
+/* ── Shell / Chrome ────────────────────────────────────── */
+.shell{
+  background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);flex-shrink:0;
+  transition:background .3s ease,border-color .3s ease;
+  box-shadow:var(--shadow);position:relative;z-index:100;user-select:none
 }
 
-/* ── CHROME BAR (titlebar + tabs unified) ── */
-.chrome {
-  height: 52px;
-  background: var(--surface);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 12px;
-  flex-shrink: 0;
-  position: relative;
+/* Traffic Lights */
+.traffic-lights{
+  display:flex;align-items:center;gap:8px;padding:10px 16px 0;height:36px
 }
-.chrome::after {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: rgba(255,255,255,0.9);
-  pointer-events: none;
+.tl{
+  width:13px;height:13px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:filter .15s,transform .15s;position:relative;overflow:hidden
+}
+.tl::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:rgba(255,255,255,.25);opacity:0;transition:opacity .15s}
+.tl:hover::after{opacity:1}
+.tl:active{transform:scale(.88)}
+.tl-red{background:var(--tl-red,#ff5f57);box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+.tl-yellow{background:var(--tl-yellow,#febc2e);box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+.tl-green{background:var(--tl-green,#28c840);box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+.tl-red.animating{animation:tlBounce .4s ease}
+.tl-yellow.animating{animation:tlBounce .4s ease .05s}
+.tl-green.animating{animation:tlBounce .4s ease .1s}
+@keyframes tlBounce{0%{transform:scale(1)}30%{transform:scale(.72)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* Tab Bar */
+.tab-bar{
+  display:flex;align-items:center;gap:3px;
+  padding:6px 12px 0;min-height:40px;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none
+}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 12px 6px 14px;border-radius:var(--r2) var(--r2) 0 0;
+  font-size:13px;font-weight:500;color:var(--txt2);
+  background:var(--surface);border:1px solid var(--border);border-bottom:none;
+  min-width:120px;max-width:200px;cursor:pointer;
+  transition:background .18s,color .18s,border-color .18s;
+  white-space:nowrap;overflow:hidden;
+  animation:tabEnter .25s cubic-bezier(.22,1,.36,1) both
+}
+@keyframes tabEnter{
+  from{opacity:0;transform:scale(.92) translateY(6px)}
+  to{opacity:1;transform:none}
+}
+.tab.active{
+  background:var(--bg);color:var(--txt);
+  border-color:var(--border2);box-shadow:0 -2px 8px rgba(0,0,0,.06)
+}
+.tab-favicon{width:14px;height:14px;font-size:13px;flex-shrink:0}
+.tab-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab-close{
+  width:18px;height:18px;border-radius:4px;font-size:13px;line-height:1;
+  color:var(--txt3);opacity:.7;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .14s,background .14s,color .14s
+}
+.tab-close:hover{opacity:1;background:var(--border2);color:var(--txt)}
+.tab-add{
+  width:30px;height:30px;border-radius:var(--r3);font-size:18px;line-height:1;
+  color:var(--txt3);flex-shrink:0;margin-left:2px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .14s,color .14s;
+}
+.tab-add:hover{background:var(--surface);color:var(--txt)}
+
+/* Chrome Bar */
+.chrome-bar{
+  display:flex;align-items:center;gap:8px;padding:8px 12px 10px;
+}
+.nav-buttons{display:flex;align-items:center;gap:4px}
+.nav-btn{
+  width:30px;height:30px;border-radius:var(--r3);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  color:var(--txt2);transition:background .14s,color .14s,opacity .14s;
+}
+.nav-btn:hover:not(:disabled){background:var(--surface);color:var(--txt)}
+.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn.spinning{animation:spin .5s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.url-bar-wrap{
+  flex:1;position:relative;
+}
+.url-bar{
+  width:100%;height:32px;padding:0 14px;border-radius:var(--r);
+  background:var(--surface);color:var(--txt);font-size:13px;
+  border:1px solid var(--border);
+  transition:background .18s,border-color .18s,box-shadow .18s;
+}
+.url-bar:focus{
+  background:var(--bg);border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-s)
+}
+.url-bar::placeholder{color:var(--txt3)}
+
+.chrome-controls{display:flex;align-items:center;gap:5px}
+.ctrl-btn{
+  height:30px;padding:0 10px;border-radius:var(--r3);font-size:12px;font-weight:600;
+  color:var(--txt2);transition:background .14s,color .14s;display:flex;
+  align-items:center;gap:5px;white-space:nowrap;
+  border:1px solid var(--border);background:var(--surface);
+}
+.ctrl-btn:hover{background:var(--surface2);color:var(--txt);border-color:var(--border2)}
+.ctrl-btn.active{background:var(--accent-s);color:var(--accent);border-color:var(--accent-s2)}
+.vpn-btn.vpn-on{background:var(--green-s);color:var(--green);border-color:rgba(34,197,94,.25)}
+.theme-pill{font-weight:700;font-size:11.5px;letter-spacing:.3px;text-transform:uppercase}
+.menu-btn{font-size:18px;padding:0 8px;letter-spacing:1px}
+.reader-btn,.shield-btn{font-size:16px;padding:0 9px}
+
+/* ── Body Layout ───────────────────────────────────────── */
+.body-area{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+.sidebar{
+  width:52px;background:var(--surface);border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px;
+  flex-shrink:0;transition:background .3s,border-color .3s;z-index:50;
+  position:relative;
+}
+.sb-icon{
+  width:38px;height:38px;border-radius:var(--r2);font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--txt3);transition:background .14s,color .14s;position:relative;
+}
+.sb-icon:hover,.sb-icon.active{background:var(--surface2);color:var(--txt)}
+.sb-icon.active{color:var(--accent)}
+.sb-icon .sb-tooltip{
+  position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:var(--surface3);color:var(--txt);font-size:11.5px;font-weight:500;
+  padding:4px 9px;border-radius:var(--r3);white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .14s;z-index:200;box-shadow:var(--shadow)
+}
+.sb-icon:hover .sb-tooltip{opacity:1}
+.sb-spacer{flex:1}
+
+/* Sidebar Panels */
+.panel-area{
+  width:0;background:var(--bg);border-right:1px solid var(--border);
+  overflow:hidden;transition:width .28s cubic-bezier(.22,1,.36,1),border-color .3s;
+  flex-shrink:0;display:flex;flex-direction:column;
+}
+.panel-area.open{width:290px}
+.panel{
+  display:none;flex-direction:column;height:100%;overflow:hidden;
+  animation:panelSlide .25s cubic-bezier(.22,1,.36,1) both
+}
+.panel.visible{display:flex}
+@keyframes panelSlide{
+  from{opacity:0;transform:translateX(-12px)}
+  to{opacity:1;transform:none}
+}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0
+}
+.panel-title{font-size:14px;font-weight:700;color:var(--txt)}
+.panel-close{
+  width:26px;height:26px;border-radius:var(--r3);font-size:16px;
+  color:var(--txt3);display:flex;align-items:center;justify-content:center;
+  transition:background .14s,color .14s
+}
+.panel-close:hover{background:var(--surface);color:var(--txt)}
+.panel-body{flex:1;overflow-y:auto;padding:12px}
+
+/* Panel rows */
+.panel-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:var(--r2);margin-bottom:4px;
+  transition:background .14s;
+}
+.panel-row:hover{background:var(--surface)}
+.panel-row-label{font-size:13px;font-weight:500;color:var(--txt)}
+.panel-row-sub{font-size:11.5px;color:var(--txt3);margin-top:2px}
+.panel-section{margin-bottom:16px}
+.panel-section-title{
+  font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--txt3);padding:0 2px 8px
 }
 
-/* Traffic lights */
-.lights { display:flex; gap:7px; align-items:center; flex-shrink:0 }
-.lt {
-  width: 13px; height: 13px; border-radius: 50%;
-  cursor: pointer; position: relative;
-  transition: filter 0.12s;
+/* Toggle Switch */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{
+  width:36px;height:20px;border-radius:10px;background:var(--border3);
+  position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;
+  border:none;
 }
-.lt:hover { filter: brightness(0.85) }
-.lt-r { background: #ff5f57; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.15) }
-.lt-y { background: #ffbd2e; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.12) }
-.lt-g { background: #28ca42; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.12) }
+.toggle.on{background:var(--accent)}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:14px;height:14px;border-radius:50%;background:#fff;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 1px 4px rgba(0,0,0,.2)
+}
+.toggle.on::after{transform:translateX(16px)}
 
-/* Logo mark */
-.wordmark {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex-shrink: 0;
-  margin-left: 2px;
+/* stat chip */
+.stat-chip{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  background:var(--surface2);border:1px solid var(--border2);border-radius:20px;
+  font-size:12.5px;font-weight:600;color:var(--txt2)
 }
-.wm-icon {
-  width: 22px; height: 22px;
-  background: var(--accent);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 1px 4px rgba(74,63,224,0.35);
-}
-.wm-text {
-  font-family: var(--serif);
-  font-size: 15px;
-  font-style: italic;
-  color: var(--txt);
-  letter-spacing: -0.01em;
+.stat-num{color:var(--accent);font-variant-numeric:tabular-nums;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.stat-num.bump{animation:statBump .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes statBump{
+  0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}
 }
 
-/* Tabs */
-.tabs {
-  flex: 1; display: flex; align-items: center; gap: 3px;
-  overflow: hidden; padding: 0 4px;
-  min-width: 0;
+/* Engine picker */
+.engine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.engine-btn{
+  padding:8px 4px;border-radius:var(--r2);font-size:12px;font-weight:600;
+  background:var(--surface);border:1.5px solid var(--border2);color:var(--txt2);
+  transition:all .16s;text-align:center
 }
-.tab {
-  height: 34px; min-width: 0; max-width: 200px; flex: 1;
-  display: flex; align-items: center; gap: 7px;
-  padding: 0 11px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 12px; font-weight: 500;
-  color: var(--txt2);
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-  white-space: nowrap; overflow: hidden;
-  border: 1px solid transparent;
-  position: relative;
-}
-.tab:hover { background: var(--surface2); color: var(--txt) }
-.tab.active {
-  background: var(--surface3);
-  color: var(--txt);
-  border-color: var(--border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.9) inset;
-}
-.tab-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  flex-shrink: 0; display: block;
-}
-.tab-title { flex:1; overflow: hidden; text-overflow: ellipsis }
-.tab-x {
-  width: 15px; height: 15px; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--txt3); flex-shrink: 0;
-  opacity: 0; transition: opacity 0.12s, background 0.12s;
-}
-.tab:hover .tab-x, .tab.active .tab-x { opacity: 1 }
-.tab-x:hover { background: var(--border); color: var(--txt) }
-
-.tab-new {
-  width: 30px; height: 30px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--txt3); font-size: 18px;
-  transition: background 0.12s, color 0.12s;
-  flex-shrink: 0;
-}
-.tab-new:hover { background: var(--surface2); color: var(--txt) }
-
-/* Chrome right actions */
-.chrome-actions { display:flex; gap:4px; flex-shrink:0 }
-.c-btn {
-  width: 30px; height: 30px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--txt2);
-  transition: background 0.12s, color 0.12s;
-}
-.c-btn:hover { background: var(--surface2); color: var(--txt) }
-.c-btn.on { color: var(--accent); background: var(--accent-s2) }
-
-/* ── TOOLBAR ── */
-.toolbar {
-  height: 52px;
-  background: var(--surface);
-  backdrop-filter: blur(var(--blur));
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 14px; gap: 8px;
-  flex-shrink: 0;
+.engine-btn:hover{background:var(--surface2);color:var(--txt)}
+.engine-btn.selected{
+  background:var(--accent-s);color:var(--accent);
+  border-color:var(--accent)
 }
 
-.nav { display:flex; gap:3px }
-.n-btn {
-  width: 30px; height: 30px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--txt2);
-  transition: background 0.12s, color 0.12s;
+/* History / Bookmark / Download list items */
+.list-item{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;
+  border-radius:var(--r2);cursor:pointer;transition:background .14s
 }
-.n-btn:hover { background: var(--glass); color: var(--txt) }
-.n-btn.dim { opacity: 0.35; pointer-events: none }
+.list-item:hover{background:var(--surface)}
+.list-item-icon{
+  width:32px;height:32px;border-radius:var(--r3);background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0
+}
+.list-item-info{flex:1;min-width:0}
+.list-item-title{font-size:13px;font-weight:500;color:var(--txt);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item-sub{font-size:11px;color:var(--txt3);margin-top:1px}
 
-/* Address bar */
-.omni-wrap { flex:1; min-width:0 }
-.omni {
-  width: 100%; height: 36px;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  display: flex; align-items: center;
-  padding: 0 12px; gap: 8px;
-  cursor: text; position: relative;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+/* Notes */
+.notes-area{
+  width:100%;flex:1;min-height:120px;resize:none;
+  background:var(--surface);color:var(--txt);font-size:13px;line-height:1.6;
+  border:1px solid var(--border2);border-radius:var(--r2);padding:10px;
+  font-family:'Geist',sans-serif;transition:border-color .18s,box-shadow .18s
 }
-.omni:hover { background: var(--surface2); border-color: var(--border2) }
-.omni.focus { background: var(--surface3); border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-s) }
-.lock { flex-shrink:0 }
-.omni-text {
-  flex:1; font-family: var(--mono); font-size: 12px; color: var(--txt2);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.notes-area:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s)}
+.notes-buttons{display:flex;gap:8px;margin-top:10px}
+.btn-primary{
+  flex:1;height:34px;border-radius:var(--r2);background:var(--accent);
+  color:#fff;font-size:13px;font-weight:600;transition:opacity .16s,transform .14s
 }
-.omni-text b { color: var(--txt); font-weight: 500 }
-.omni-chips { display:flex; gap:4px; align-items:center; flex-shrink:0 }
-.chip {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 100px;
+.btn-primary:hover{opacity:.88}
+.btn-primary:active{transform:scale(.97)}
+.btn-ghost{
+  flex:1;height:34px;border-radius:var(--r2);background:var(--surface);
+  color:var(--txt2);font-size:13px;font-weight:500;border:1px solid var(--border2);
+  transition:background .14s
 }
-.chip-s { background: var(--green-s); color: var(--green) }
-.chip-v { background: var(--accent-s); color: var(--accent) }
-.chip-b { background: var(--orange-s); color: var(--orange) }
+.btn-ghost:hover{background:var(--surface2)}
 
-/* Toolbar actions */
-.t-actions { display:flex; gap:4px }
-.t-btn {
-  height: 30px; padding: 0 10px; border-radius: 9px;
-  display: flex; align-items: center; gap: 5px;
-  cursor: pointer; font-size: 11px; font-weight: 500;
-  color: var(--txt2); border: 1px solid transparent;
-  transition: all 0.12s;
+/* ── Content Area ──────────────────────────────────────── */
+.content-area{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+.browser-frame{
+  position:absolute;inset:0;width:100%;height:100%;border:none;
+  background:#fff;display:none;
 }
-.t-btn:hover { background: var(--glass); color: var(--txt); border-color: var(--border) }
-.t-btn.on {
-  background: var(--accent-s); color: var(--accent);
-  border-color: rgba(74,63,224,0.2);
+.browser-frame.visible{display:block}
+.page-flash{
+  position:absolute;inset:0;background:var(--bg);
+  animation:pageFlash .35s ease forwards;pointer-events:none;z-index:10
 }
-.t-more {
-  width: 30px; height: 30px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--txt2); transition: background 0.12s, color 0.12s;
-}
-.t-more:hover { background: var(--glass); color: var(--txt) }
-
-/* ── LAYOUT ── */
-.body { flex:1; display:flex; min-height:0 }
-
-/* ── SIDEBAR ── */
-.sidebar {
-  width: 58px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.4) 100%);
-  backdrop-filter: blur(var(--blur));
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  align-items: center; padding: 12px 0;
-  gap: 3px; flex-shrink: 0;
-}
-.s-btn {
-  width: 38px; height: 38px; border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--txt3);
-  transition: background 0.12s, color 0.12s;
-  position: relative;
-}
-.s-btn:hover { background: var(--surface2); color: var(--txt2) }
-.s-btn.on { background: var(--accent-s); color: var(--accent) }
-.s-tip {
-  position: absolute; left: 46px; top: 50%;
-  transform: translateY(-50%);
-  background: var(--txt); color: white;
-  font-size: 11px; font-weight: 500;
-  padding: 4px 9px; border-radius: 7px;
-  white-space: nowrap; pointer-events: none;
-  opacity: 0; transition: opacity 0.12s;
-  z-index: 500;
-}
-.s-tip::before {
-  content: '';
-  position: absolute; right: 100%; top: 50%;
-  transform: translateY(-50%);
-  border: 4px solid transparent;
-  border-right-color: var(--txt);
-}
-.s-btn:hover .s-tip { opacity: 1 }
-.s-sep { width: 26px; height: 1px; background: var(--border2); margin: 5px 0 }
-.s-space { flex:1 }
-
-/* ── CONTENT ── */
-.content { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden }
-
-/* Wrapper ribbon */
-.ribbon {
-  height: 30px;
-  background: linear-gradient(90deg, var(--orange-s), rgba(234,88,12,0.03));
-  border-bottom: 1px solid rgba(234,88,12,0.15);
-  display: flex; align-items: center;
-  padding: 0 16px; gap: 8px; flex-shrink: 0;
-}
-.ribbon-pulse {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--orange);
-  box-shadow: 0 0 0 2px rgba(234,88,12,0.2);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 2px rgba(234,88,12,0.2) }
-  50%      { box-shadow: 0 0 0 5px rgba(234,88,12,0.08) }
-}
-.ribbon-text { font-size: 11px; color: var(--orange); font-weight: 600; letter-spacing: 0.03em }
-.ribbon-change {
-  margin-left: auto; font-size: 10px; color: var(--txt3);
-  cursor: pointer; transition: color 0.12s;
-}
-.ribbon-change:hover { color: var(--orange) }
-
-/* Viewport */
-.viewport { flex:1; overflow:hidden; position:relative; display:flex }
-
-/* ── NEW TAB ── */
-.newtab {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-start;
-  padding: 48px 24px 24px; gap: 32px; overflow-y: auto;
-  background: linear-gradient(180deg, #f4f1eb 0%, #ede9e0 100%);
-}
-.nt-time-wrap { text-align: center; margin-bottom: -8px }
-.nt-time {
-  font-family: var(--serif);
-  font-size: 68px;
-  color: var(--txt);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  font-style: italic;
-}
-.nt-date {
-  font-size: 12px; color: var(--txt3); font-weight: 400;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  margin-top: 8px;
+@keyframes pageFlash{
+  0%{opacity:.7}50%{opacity:.3}100%{opacity:0}
 }
 
-/* Search */
-.nt-search {
-  width: 100%; max-width: 540px;
-  height: 50px;
-  background: var(--surface3);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  display: flex; align-items: center;
-  padding: 0 18px; gap: 12px;
-  cursor: text;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 16px rgba(0,0,0,0.06);
-  transition: border-color 0.15s, box-shadow 0.15s;
+/* ── New Tab Page ──────────────────────────────────────── */
+.new-tab{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:32px;
+  background:var(--bg);overflow:hidden;
+  transition:background .3s
 }
-.nt-search:hover {
-  border-color: var(--border2);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 20px rgba(0,0,0,0.08);
-}
-.nt-search-ph { flex:1; font-size:14px; color:var(--txt3); font-weight:400 }
-.nt-search-cmd {
-  font-family: var(--mono); font-size: 11px; color: var(--txt3);
-  background: var(--glass); border: 1px solid var(--border);
-  padding: 2px 7px; border-radius: 5px;
+/* Crimson background texture */
+[data-theme="crimson"] .new-tab::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,28,28,.12) 0%,transparent 70%),
+             radial-gradient(ellipse 40% 40% at 50% 100%,rgba(200,28,28,.08) 0%,transparent 70%);
+  pointer-events:none
 }
 
-/* Quick access */
-.quick {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 14px;
-  width: 100%;
-  max-width: 540px;
+/* Hex Logo (crimson only) */
+.hex-logo-wrap{
+  display:none;flex-direction:column;align-items:center;gap:16px;
+  animation:logoReveal .7s cubic-bezier(.22,1,.36,1) both
 }
-.q-item {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 7px; cursor: pointer;
+[data-theme="crimson"] .hex-logo-wrap{display:flex}
+@keyframes logoReveal{
+  from{opacity:0;transform:scale(.8) translateY(16px)}
+  to{opacity:1;transform:none}
 }
-.q-icon {
-  width: 48px; height: 48px; border-radius: 13px;
-  background: var(--surface3);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  transition: all 0.15s;
+.hex-logo-text{text-align:center}
+.hex-logo-title{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:34px;color:var(--txt);letter-spacing:-.5px;line-height:1
 }
-.q-item:hover .q-icon {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  border-color: var(--border2);
-}
-.q-label { font-size: 10px; color: var(--txt3); text-align: center; white-space: nowrap; overflow: hidden; max-width: 52px; text-overflow: ellipsis }
-
-/* Stats */
-.stats { display:flex; gap:10px; width:100%; max-width:540px }
-.stat {
-  flex:1; background: var(--surface3); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  display: flex; flex-direction: column; gap: 4px;
-}
-.stat-lbl { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--txt3) }
-.stat-val { font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--txt); line-height: 1; letter-spacing: -0.02em }
-.stat-val.g { color: var(--green) }
-.stat-val.p { color: var(--accent2) }
-.stat-val.a { color: var(--amber) }
-.stat-sub { font-size: 10px; color: var(--txt3) }
-
-/* ── PANEL ── */
-.panel {
-  width: 272px; flex-shrink: 0;
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(var(--blur));
-  border-left: 1px solid var(--border);
-  display: flex; flex-direction: column;
-}
-.panel-head {
-  padding: 14px 14px 0;
-  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
-}
-.p-tab {
-  padding: 7px 14px 10px;
-  font-size: 11px; font-weight: 600;
-  color: var(--txt3); cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.12s;
-  letter-spacing: 0.02em;
-}
-.p-tab.on { color: var(--accent); border-bottom-color: var(--accent) }
-.p-tab:hover:not(.on) { color: var(--txt2) }
-
-.panel-body {
-  flex: 1; padding: 14px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.p-section {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--txt3); margin: 4px 0 -2px;
+.hex-logo-subtitle{
+  font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--accent);margin-top:6px;opacity:.85
 }
 
-/* Toggle rows */
-.t-row {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 11px; border-radius: 12px;
-  background: var(--surface3); border: 1px solid var(--border3);
-  cursor: pointer; transition: border-color 0.12s, box-shadow 0.12s;
+/* Clock */
+.clock-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  animation:fadeUp .5s ease both
 }
-.t-row:hover { border-color: var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.05) }
-.t-ico {
-  width: 26px; height: 26px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+[data-theme="crimson"] .clock-wrap{display:none}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
 }
-.ico-g { background: var(--green-s) }
-.ico-p { background: var(--accent-s) }
-.ico-a { background: var(--amber-s) }
-.ico-r { background: rgba(220,38,38,0.08) }
-.ico-t { background: rgba(6,182,212,0.08) }
-.t-info { flex:1; min-width:0 }
-.t-name { font-size: 11px; font-weight: 600; color: var(--txt) }
-.t-desc { font-size: 10px; color: var(--txt3); margin-top: 1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-
-/* Toggle switch */
-.sw {
-  width: 30px; height: 18px; border-radius: 9px;
-  position: relative; flex-shrink: 0; cursor: pointer;
-  transition: background 0.2s;
+.clock-time{
+  font-family:'Geist Mono',monospace;font-size:56px;font-weight:300;
+  color:var(--txt);letter-spacing:-2px;line-height:1
 }
-.sw.on { background: var(--accent) }
-.sw.off { background: #d1cec9 }
-.sw::after {
-  content: ''; position: absolute; top: 3px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  transition: left 0.18s cubic-bezier(.34,1.56,.64,1);
-}
-.sw.on::after { left: 15px }
-.sw.off::after { left: 3px }
-
-/* Browser options */
-.b-opt {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 11px; border-radius: 12px;
-  background: var(--surface3); border: 1px solid var(--border3);
-  cursor: pointer; transition: border-color 0.12s, background 0.12s;
-}
-.b-opt:hover { border-color: var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.05) }
-.b-opt.sel { background: var(--orange-s); border-color: rgba(234,88,12,0.25) }
-.b-opt.sel-native { background: var(--accent-s2); border-color: rgba(74,63,224,0.2) }
-.b-logo {
-  width: 26px; height: 26px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-.b-name { font-size: 11px; font-weight: 600; color: var(--txt) }
-.b-sub { font-size: 9px; color: var(--txt3); margin-top: 1px }
-.b-chk {
-  margin-left: auto; width: 18px; height: 18px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.b-chk.y { background: var(--orange); box-shadow: 0 1px 3px rgba(234,88,12,0.35) }
-.b-chk.yn { background: var(--accent); box-shadow: 0 1px 3px rgba(74,63,224,0.35) }
-.b-chk.n { background: none; border: 1.5px solid var(--border2) }
-
-/* ── PLACEHOLDER VIEWS ── */
-.pview {
-  flex:1; display:none; align-items:center;
-  justify-content:center; flex-direction:column; gap:14px;
-  background: linear-gradient(180deg, #f4f1eb 0%, #ede9e0 100%);
-}
-.pv-icon {
-  width: 56px; height: 56px; border-radius: 18px;
-  display: flex; align-items: center; justify-content: center;
-}
-.pv-title { font-family: var(--serif); font-size: 18px; font-style: italic; color: var(--txt) }
-.pv-sub { font-size: 12px; color: var(--txt3); text-align: center; max-width: 220px; line-height: 1.6 }
-
-/* ── STATUS BAR ── */
-.statusbar {
-  height: 26px;
-  background: var(--surface);
-  backdrop-filter: blur(var(--blur));
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 16px; gap: 18px; flex-shrink: 0;
-}
-.st-item {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 10px; color: var(--txt3); font-family: var(--mono);
-}
-.st-dot { width: 5px; height: 5px; border-radius: 50% }
-.d-g { background: var(--green) }
-.d-p { background: var(--accent2) }
-.d-a { background: var(--amber) }
-.st-sep { flex:1 }
-.st-engine {
-  font-size: 10px; color: var(--txt3); font-family: var(--mono);
-  display: flex; align-items: center; gap: 5px;
+.clock-date{
+  font-size:14px;color:var(--txt3);font-weight:400;letter-spacing:.2px
 }
 
-/* Scrollbar styling */
-.panel-body::-webkit-scrollbar { width: 4px }
-.panel-body::-webkit-scrollbar-track { background: transparent }
-.panel-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px }
-.newtab::-webkit-scrollbar { width: 4px }
-.newtab::-webkit-scrollbar-track { background: transparent }
-.newtab::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px }
+/* New Tab Search */
+.nt-search-wrap{
+  position:relative;width:480px;max-width:90vw;
+  animation:fadeUp .5s .1s ease both
+}
+.nt-search-input{
+  width:100%;height:46px;padding:0 48px 0 18px;border-radius:24px;
+  background:var(--surface);border:1.5px solid var(--border2);
+  color:var(--txt);font-size:15px;
+  transition:background .18s,border-color .18s,box-shadow .18s
+}
+.nt-search-input:focus{
+  background:var(--bg);border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-s),var(--shadow2)
+}
+.nt-search-input::placeholder{color:var(--txt3)}
+.nt-search-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;
+  transition:opacity .16s,transform .14s
+}
+.nt-search-btn:hover{opacity:.88}
+.nt-search-btn:active{transform:translateY(-50%) scale(.92)}
+
+/* Stats Row */
+.stats-row{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .5s .2s ease both
+}
+
+/* Quick Links */
+.quick-links{
+  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .5s .3s ease both
+}
+.quick-link{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:12px 16px;border-radius:var(--r);background:var(--surface);
+  border:1px solid var(--border);cursor:pointer;
+  transition:background .16s,transform .14s,box-shadow .16s;min-width:72px;
+}
+.quick-link:hover{
+  background:var(--surface2);transform:translateY(-2px);box-shadow:var(--shadow)
+}
+.quick-link-icon{font-size:22px}
+.quick-link-label{font-size:11.5px;color:var(--txt2);font-weight:500}
+
+/* ── Dropdown Menu ─────────────────────────────────────── */
+.dropdown{
+  position:absolute;top:calc(100% + 6px);right:12px;
+  width:220px;background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r);box-shadow:var(--shadow2);z-index:500;
+  padding:6px;display:none;
+  animation:dropdownAppear .2s cubic-bezier(.22,1,.36,1) both
+}
+.dropdown.open{display:block}
+@keyframes dropdownAppear{
+  from{opacity:0;transform:translateY(-6px) scale(.97)}
+  to{opacity:1;transform:none}
+}
+.dd-item{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:var(--r2);font-size:13px;font-weight:500;color:var(--txt2);
+  cursor:pointer;transition:background .13s,color .13s;width:100%;text-align:left
+}
+.dd-item:hover{background:var(--surface2);color:var(--txt)}
+.dd-item .dd-icon{width:22px;font-size:15px;text-align:center;flex-shrink:0}
+.dd-sep{height:1px;background:var(--border);margin:4px 0}
+
+/* ── Toast Notifications ───────────────────────────────── */
+.toast-container{
+  position:fixed;bottom:20px;right:20px;display:flex;
+  flex-direction:column-reverse;gap:8px;z-index:9999;pointer-events:none
+}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:var(--r);background:var(--surface3);
+  border:1px solid var(--border2);box-shadow:var(--shadow2);
+  font-size:13px;font-weight:500;color:var(--txt);pointer-events:auto;
+  animation:toastIn .3s cubic-bezier(.22,1,.36,1) both;min-width:200px;
+  max-width:320px;
+}
+.toast.out{animation:toastOut .28s ease forwards}
+@keyframes toastIn{
+  from{opacity:0;transform:translateX(30px) scale(.95)}
+  to{opacity:1;transform:none}
+}
+@keyframes toastOut{
+  to{opacity:0;transform:translateX(30px) scale(.95)}
+}
+.toast-icon{font-size:16px;flex-shrink:0}
+.toast-msg{flex:1}
+.toast-close{
+  font-size:16px;color:var(--txt3);padding:0 2px;
+  transition:color .13s;cursor:pointer
+}
+.toast-close:hover{color:var(--txt)}
+
+/* ── Settings Panel specifics ──────────────────────────── */
+.settings-group{margin-bottom:20px}
+.settings-group-title{
+  font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+  color:var(--txt3);margin-bottom:8px
+}
+
+/* download progress */
+.dl-progress{height:3px;border-radius:2px;background:var(--border2);margin-top:5px}
+.dl-bar{height:100%;border-radius:2px;background:var(--accent);transition:width .4s ease}
+
+/* ── Utility ───────────────────────────────────────────── */
+.hidden{display:none!important}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;height:18px;padding:0 5px;border-radius:9px;
+  font-size:10.5px;font-weight:700;background:var(--accent);color:#fff
+}
 </style>
 </head>
 <body>
+<div id="app">
 
-<div id="shell">
-
-  <!-- ── CHROME ── -->
-  <div class="chrome">
-    <div class="lights">
-      <div class="lt lt-r"></div>
-      <div class="lt lt-y"></div>
-      <div class="lt lt-g"></div>
+  <!-- ── Shell ───────────────────────────────────────────── -->
+  <div class="shell" id="shell">
+    <div class="traffic-lights">
+      <button class="tl tl-red" id="tlRed" onclick="tlAction('red')" title="Close"></button>
+      <button class="tl tl-yellow" id="tlYellow" onclick="tlAction('yellow')" title="Minimize"></button>
+      <button class="tl tl-green" id="tlGreen" onclick="tlAction('green')" title="Fullscreen"></button>
     </div>
 
-    <div class="wordmark">
-      <div class="wm-icon">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-          <polygon points="6.5,0.5 12.5,3.5 12.5,9.5 6.5,12.5 0.5,9.5 0.5,3.5" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
-          <circle cx="6.5" cy="6.5" r="2.5" fill="white"/>
-        </svg>
-      </div>
-      <span class="wm-text">VectisX</span>
+    <div class="tab-bar" id="tabBar">
+      <button class="tab-add" onclick="addTab()" title="New Tab">+</button>
     </div>
 
-    <div class="tabs" id="tabs">
-      <div class="tab active" onclick="switchTab('newtab',this)">
-        <span class="tab-dot" style="background:#4a3fe0"></span>
-        <span class="tab-title">New Tab</span>
-        <span class="tab-x">✕</span>
+    <div class="chrome-bar" style="position:relative">
+      <div class="nav-buttons">
+        <button class="nav-btn" id="backBtn" onclick="goBack()" title="Back" disabled>&#8592;</button>
+        <button class="nav-btn" id="fwdBtn" onclick="goForward()" title="Forward" disabled>&#8594;</button>
+        <button class="nav-btn" id="refreshBtn" onclick="refresh()" title="Refresh">&#8635;</button>
       </div>
-      <div class="tab" onclick="switchTab('privacy',this)">
-        <span class="tab-dot" style="background:#16a34a"></span>
-        <span class="tab-title">github.com</span>
-        <span class="tab-x">✕</span>
-      </div>
-      <div class="tab" onclick="switchTab('wrapper',this)">
-        <span class="tab-dot" style="background:#ea580c"></span>
-        <span class="tab-title">Brave Mode</span>
-        <span class="tab-x">✕</span>
-      </div>
-      <div class="tab-new">+</div>
-    </div>
 
-    <div class="chrome-actions">
-      <div class="c-btn on" title="VPN Active">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 1.5C4.8 4 4.8 10 7 12.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 1.5C9.2 4 9.2 10 7 12.5" stroke="currentColor" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="currentColor" stroke-width="1.2"/></svg>
+      <div class="url-bar-wrap">
+        <input type="text" class="url-bar" id="urlBar"
+          placeholder="Search the web or enter a URL"
+          onkeydown="onUrlKey(event)" autocomplete="off" spellcheck="false">
       </div>
-      <div class="c-btn" title="Extensions">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.2"/></svg>
+
+      <div class="chrome-controls">
+        <button class="ctrl-btn vpn-btn" id="vpnBtn" onclick="toggleVPN()">
+          <span style="font-size:13px">&#9679;</span> VPN
+        </button>
+        <button class="ctrl-btn reader-btn" id="readerBtn" onclick="toggleReader()" title="Reader Mode">
+          &#9783;
+        </button>
+        <button class="ctrl-btn shield-btn" id="shieldBtn" onclick="toggleShield()" title="Shield Mode">
+          &#9650;
+        </button>
+        <button class="ctrl-btn theme-pill" id="themeBtn" onclick="cycleTheme()">Light</button>
+        <button class="ctrl-btn menu-btn" id="menuBtn" onclick="toggleMenu()">&#8942;</button>
+      </div>
+
+      <!-- Dropdown Menu -->
+      <div class="dropdown" id="dropdown">
+        <button class="dd-item" onclick="openPanel('bookmarks');closeMenu()">
+          <span class="dd-icon">&#9733;</span> Bookmarks
+        </button>
+        <button class="dd-item" onclick="openPanel('history');closeMenu()">
+          <span class="dd-icon">&#9679;</span> History
+        </button>
+        <button class="dd-item" onclick="openPanel('downloads');closeMenu()">
+          <span class="dd-icon">&#8681;</span> Downloads
+        </button>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="openPanel('privacy');closeMenu()">
+          <span class="dd-icon">&#9675;</span> Privacy &amp; Security
+        </button>
+        <button class="dd-item" onclick="openPanel('notes');closeMenu()">
+          <span class="dd-icon">&#9998;</span> Notes
+        </button>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="openPanel('settings');closeMenu()">
+          <span class="dd-icon">&#9881;</span> Settings
+        </button>
+        <button class="dd-item" onclick="addTab();closeMenu()">
+          <span class="dd-icon">+</span> New Tab
+        </button>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="toast('VectisX v2.0 — Build 2025','info');closeMenu()">
+          <span class="dd-icon">&#9432;</span> About VectisX
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ── TOOLBAR ── -->
-  <div class="toolbar">
-    <div class="nav">
-      <div class="n-btn dim">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="9,2 4,7 9,12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="n-btn">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="5,2 10,7 5,12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="n-btn" id="rbtn" onclick="spinRefresh()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" id="rico"><path d="M2.5 7A4.5 4.5 0 0 1 11 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><polyline points="9,2 11,4.5 8.5,6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 7A4.5 4.5 0 0 1 3 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><polyline points="5,11.5 3,9.5 5.5,7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+  <!-- ── Body ─────────────────────────────────────────────── -->
+  <div class="body-area">
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <button class="sb-icon" id="sb-privacy" onclick="togglePanel('privacy')" title="Privacy">
+        &#9675;<span class="sb-tooltip">Privacy</span>
+      </button>
+      <button class="sb-icon" id="sb-wrapper" onclick="togglePanel('wrapper')" title="Wrapper">
+        &#9711;<span class="sb-tooltip">Wrapper</span>
+      </button>
+      <button class="sb-icon" id="sb-history" onclick="togglePanel('history')" title="History">
+        &#10227;<span class="sb-tooltip">History</span>
+      </button>
+      <button class="sb-icon" id="sb-bookmarks" onclick="togglePanel('bookmarks')" title="Bookmarks">
+        &#9733;<span class="sb-tooltip">Bookmarks</span>
+      </button>
+      <button class="sb-icon" id="sb-downloads" onclick="togglePanel('downloads')" title="Downloads">
+        &#8681;<span class="sb-tooltip">Downloads</span>
+      </button>
+      <button class="sb-icon" id="sb-notes" onclick="togglePanel('notes')" title="Notes">
+        &#9998;<span class="sb-tooltip">Notes</span>
+      </button>
+      <div class="sb-spacer"></div>
+      <button class="sb-icon" id="sb-settings" onclick="togglePanel('settings')" title="Settings">
+        &#9881;<span class="sb-tooltip">Settings</span>
+      </button>
     </div>
 
-    <div class="omni-wrap">
-      <div class="omni" id="omni" tabindex="0" onclick="this.classList.add('focus')" onblur="this.classList.remove('focus')">
-        <svg class="lock" width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <rect x="2" y="5" width="8" height="6" rx="1.5" stroke="#16a34a" stroke-width="1.2"/>
-          <path d="M4 5V3.5a2 2 0 0 1 4 0V5" stroke="#16a34a" stroke-width="1.2"/>
-        </svg>
-        <span class="omni-text" id="omni-txt"><b>vectis</b>://newtab</span>
-        <div class="omni-chips" id="omni-chips">
-          <span class="chip chip-s">Shield</span>
-          <span class="chip chip-v">VPN</span>
+    <!-- Panel Area -->
+    <div class="panel-area" id="panelArea">
+
+      <!-- Privacy Panel -->
+      <div class="panel" id="panel-privacy">
+        <div class="panel-header">
+          <span class="panel-title">Privacy &amp; Security</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
         </div>
-      </div>
-    </div>
-
-    <div class="t-actions">
-      <div class="t-btn" id="tb-reader" onclick="this.classList.toggle('on')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2h4v8H2z" stroke="currentColor" stroke-width="1.1"/><path d="M6 2h4v8H6z" stroke="currentColor" stroke-width="1.1"/></svg>
-        Reader
-      </div>
-      <div class="t-btn on" id="tb-shield" onclick="this.classList.toggle('on')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L11 3.5V7C11 9.5 6 11 6 11S1 9.5 1 7V3.5Z" stroke="currentColor" stroke-width="1.1"/><polyline points="4,6 5.5,7.5 8,5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Shield
-      </div>
-      <div class="t-more">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="3.5" r="1" fill="currentColor"/><circle cx="7" cy="7" r="1" fill="currentColor"/><circle cx="7" cy="10.5" r="1" fill="currentColor"/></svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── BODY ── -->
-  <div class="body">
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="s-btn on" id="sb-privacy" onclick="setPanel('privacy')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14 4.5V9C14 12.5 8 14.5 8 14.5S2 12.5 2 9V4.5Z" stroke="currentColor" stroke-width="1.35"/></svg>
-        <div class="s-tip">Privacy</div>
-      </div>
-      <div class="s-btn" id="sb-wrapper" onclick="setPanel('wrapper')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.35"/><rect x="5" y="5" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
-        <div class="s-tip">Wrapper</div>
-      </div>
-      <div class="s-btn" id="sb-history" onclick="setPanel('history')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.35"/><polyline points="8,5 8,8 10.5,10" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="s-tip">History</div>
-      </div>
-      <div class="s-btn" id="sb-bookmarks" onclick="setPanel('bookmarks')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2H12V14L8 11 4 14Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/></svg>
-        <div class="s-tip">Bookmarks</div>
-      </div>
-      <div class="s-sep"></div>
-      <div class="s-btn" id="sb-downloads" onclick="setPanel('downloads')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="8" y1="3" x2="8" y2="11" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/><polyline points="5,8 8,11 11,8" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="13" x2="13" y2="13" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg>
-        <div class="s-tip">Downloads</div>
-      </div>
-      <div class="s-btn" id="sb-notes" onclick="setPanel('notes')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.35"/><line x1="5.5" y1="6" x2="10.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="5.5" y1="9" x2="8.5" y2="9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        <div class="s-tip">Notes</div>
-      </div>
-      <div class="s-space"></div>
-      <div class="s-btn" id="sb-settings" onclick="setPanel('settings')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.35"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.1 3.1l1.1 1.1M11.8 11.8l1.1 1.1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg>
-        <div class="s-tip">Settings</div>
-      </div>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="content">
-
-      <!-- Ribbon -->
-      <div class="ribbon" id="ribbon" style="display:none">
-        <div class="ribbon-pulse"></div>
-        <span class="ribbon-text" id="ribbon-txt">Wrapper Mode — Brave Browser</span>
-        <span class="ribbon-change" onclick="setPanel('wrapper')">Change engine</span>
-      </div>
-
-      <div class="viewport">
-
-        <!-- NEW TAB VIEW -->
-        <div id="view-newtab" class="newtab" style="display:flex">
-          <div class="nt-time-wrap">
-            <div class="nt-time" id="clock">--:--</div>
-            <div class="nt-date" id="datestr">Loading</div>
-          </div>
-
-          <div class="nt-search">
-            <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.2" stroke="#a09b96" stroke-width="1.4"/><line x1="9.2" y1="9.2" x2="12.5" y2="12.5" stroke="#a09b96" stroke-width="1.4" stroke-linecap="round"/></svg>
-            <span class="nt-search-ph">Search or enter address…</span>
-            <span class="nt-search-cmd">⌘K</span>
-          </div>
-
-          <div class="quick">
-            <div class="q-item"><div class="q-icon">🤖</div><span class="q-label">Claude</span></div>
-            <div class="q-item"><div class="q-icon" style="font-size:13px;color:#1a1814;font-weight:700">GH</div><span class="q-label">GitHub</span></div>
-            <div class="q-item"><div class="q-icon">▶️</div><span class="q-label">YouTube</span></div>
-            <div class="q-item"><div class="q-icon" style="font-size:12px;color:#ea580c;font-weight:700">HN</div><span class="q-label">Hacker News</span></div>
-            <div class="q-item"><div class="q-icon" style="font-size:13px;color:#7c6ff7;font-weight:600">Fig</div><span class="q-label">Figma</span></div>
-            <div class="q-item"><div class="q-icon" style="font-size:18px;color:#a09b96">＋</div><span class="q-label">Add site</span></div>
-          </div>
-
-          <div class="stats">
-            <div class="stat">
-              <span class="stat-lbl">Trackers blocked</span>
-              <span class="stat-val g" id="tc">2,847</span>
-              <span class="stat-sub">this session</span>
+        <div class="panel-body">
+          <div class="panel-section">
+            <div class="panel-section-title">Protection</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Ad Blocker</div><div class="panel-row-sub">Block trackers &amp; ads</div></div>
+              <button class="toggle on" id="tog-adblock" onclick="doToggle(this,'Ad Blocker')"></button>
             </div>
-            <div class="stat">
-              <span class="stat-lbl">Ads blocked</span>
-              <span class="stat-val p" id="ac">491</span>
-              <span class="stat-sub">this session</span>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Fingerprint Shield</div><div class="panel-row-sub">Randomize canvas/font</div></div>
+              <button class="toggle on" id="tog-fp" onclick="doToggle(this,'Fingerprint Shield')"></button>
             </div>
-            <div class="stat">
-              <span class="stat-lbl">Bandwidth saved</span>
-              <span class="stat-val a">14.2 MB</span>
-              <span class="stat-sub">this session</span>
+            <div class="panel-row">
+              <div><div class="panel-row-label">HTTPS Upgrade</div><div class="panel-row-sub">Force secure connections</div></div>
+              <button class="toggle on" id="tog-https" onclick="doToggle(this,'HTTPS Upgrade')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Cookie Manager</div><div class="panel-row-sub">Block third-party cookies</div></div>
+              <button class="toggle" id="tog-cookie" onclick="doToggle(this,'Cookie Manager')"></button>
+            </div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">VPN</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">VPN Protection</div><div class="panel-row-sub" id="vpnStatusText">Disconnected</div></div>
+              <button class="toggle" id="tog-vpn" onclick="toggleVPNPanel()"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Location</div><div class="panel-row-sub">Auto (nearest server)</div></div>
+              <span class="stat-chip" style="font-size:11px;padding:3px 9px">US-West</span>
+            </div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Stats</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div class="stat-chip">&#128683; <span id="statAds" class="stat-num">1,247</span> ads</div>
+              <div class="stat-chip">&#128065; <span id="statTrackers" class="stat-num">389</span> trackers</div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- PRIVACY VIEW -->
-        <div id="view-privacy" class="pview">
-          <div class="pv-icon" style="background:rgba(22,163,74,0.1)">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2L23 7V15C23 20 13 24 13 24S3 20 3 15V7Z" stroke="#16a34a" stroke-width="1.8" fill="rgba(22,163,74,0.08)"/><polyline points="9,13 11.5,15.5 17,10" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <!-- Wrapper Panel -->
+      <div class="panel" id="panel-wrapper">
+        <div class="panel-header">
+          <span class="panel-title">Wrapper</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body">
+          <div class="panel-section">
+            <div class="panel-section-title">Search Engine</div>
+            <div class="engine-grid">
+              <button class="engine-btn selected" data-engine="Google" onclick="pickEngine(this)">Google</button>
+              <button class="engine-btn" data-engine="Bing" onclick="pickEngine(this)">Bing</button>
+              <button class="engine-btn" data-engine="DuckDuckGo" onclick="pickEngine(this)">DDG</button>
+              <button class="engine-btn" data-engine="Brave" onclick="pickEngine(this)">Brave</button>
+              <button class="engine-btn" data-engine="Ecosia" onclick="pickEngine(this)">Ecosia</button>
+              <button class="engine-btn" data-engine="Kagi" onclick="pickEngine(this)">Kagi</button>
+            </div>
           </div>
-          <div class="pv-title">Connection Secure</div>
-          <div class="pv-sub">github.com · TLS 1.3 · No trackers detected on this page</div>
-        </div>
-
-        <!-- WRAPPER VIEW -->
-        <div id="view-wrapper" class="pview">
-          <div class="pv-icon" style="background:rgba(234,88,12,0.08)">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="3" y="3" width="20" height="20" rx="5" stroke="#ea580c" stroke-width="1.8" fill="rgba(234,88,12,0.08)"/><rect x="8" y="8" width="10" height="10" rx="2.5" stroke="#ea580c" stroke-width="1.6" fill="rgba(234,88,12,0.12)"/><circle cx="13" cy="13" r="2.5" fill="#ea580c"/></svg>
+          <div class="panel-section">
+            <div class="panel-section-title">Browser Features</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">JavaScript</div><div class="panel-row-sub">Enable JS execution</div></div>
+              <button class="toggle on" id="tog-js" onclick="doToggle(this,'JavaScript')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Images</div><div class="panel-row-sub">Load page images</div></div>
+              <button class="toggle on" id="tog-img" onclick="doToggle(this,'Images')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Media Autoplay</div><div class="panel-row-sub">Auto-play video/audio</div></div>
+              <button class="toggle" id="tog-autoplay" onclick="doToggle(this,'Media Autoplay')"></button>
+            </div>
           </div>
-          <div class="pv-title" id="wv-title">Brave Engine Active</div>
-          <div class="pv-sub">VectisX shell · All Brave extensions and shields loaded</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- PANEL -->
-    <div class="panel">
-      <div class="panel-head">
-        <div class="p-tab on" id="ptab-priv" onclick="setPanelTab('priv')">Privacy</div>
-        <div class="p-tab" id="ptab-wrap" onclick="setPanelTab('wrap')">Wrapper</div>
-      </div>
-
-      <!-- Privacy body -->
-      <div class="panel-body" id="pb-priv">
-        <div class="p-section">Protection</div>
-        <div class="t-row">
-          <div class="t-ico ico-g"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1L12 4V8C12 10.5 6.5 12 6.5 12S1 10.5 1 8V4Z" stroke="#16a34a" stroke-width="1.2"/></svg></div>
-          <div class="t-info"><div class="t-name">Ad Blocker</div><div class="t-desc">Block ads &amp; pop-ups</div></div>
-          <div class="sw on" onclick="toggle(this)"></div>
-        </div>
-        <div class="t-row">
-          <div class="t-ico ico-p"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#7c6ff7" stroke-width="1.2"/><path d="M6.5 1.5C4.5 3.5 4.5 9.5 6.5 11.5" stroke="#7c6ff7" stroke-width="1.1"/><path d="M6.5 1.5C8.5 3.5 8.5 9.5 6.5 11.5" stroke="#7c6ff7" stroke-width="1.1"/><line x1="1.5" y1="6.5" x2="11.5" y2="6.5" stroke="#7c6ff7" stroke-width="1.1"/></svg></div>
-          <div class="t-info"><div class="t-name">VPN</div><div class="t-desc">Routing via Mumbai</div></div>
-          <div class="sw on" onclick="toggle(this)"></div>
-        </div>
-        <div class="t-row">
-          <div class="t-ico ico-a"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#d97706" stroke-width="1.2"/><line x1="6.5" y1="4" x2="6.5" y2="7" stroke="#d97706" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="8.5" r="0.7" fill="#d97706"/></svg></div>
-          <div class="t-info"><div class="t-name">Fingerprint Shield</div><div class="t-desc">Randomise device signature</div></div>
-          <div class="sw on" onclick="toggle(this)"></div>
-        </div>
-        <div class="t-row">
-          <div class="t-ico ico-r"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="2" y1="11" x2="11" y2="2" stroke="#dc2626" stroke-width="1.3" stroke-linecap="round"/><path d="M4 2h5v5" stroke="#dc2626" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="t-info"><div class="t-name">Tracker Block</div><div class="t-desc">Third-party scripts</div></div>
-          <div class="sw on" onclick="toggle(this)"></div>
-        </div>
-        <div class="t-row">
-          <div class="t-ico ico-t"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5C2 4 4 2 6.5 2S11 4 11 6.5" stroke="#0891b2" stroke-width="1.2"/><path d="M4 6.5C4 5 5.1 4 6.5 4S9 5 9 6.5" stroke="#0891b2" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="1.2" fill="#0891b2"/></svg></div>
-          <div class="t-info"><div class="t-name">HTTPS Only</div><div class="t-desc">Upgrade all connections</div></div>
-          <div class="sw on" onclick="toggle(this)"></div>
-        </div>
-        <div class="t-row">
-          <div class="t-ico ico-p"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#7c6ff7" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2" stroke="#7c6ff7" stroke-width="1.1"/></svg></div>
-          <div class="t-info"><div class="t-name">DNS over HTTPS</div><div class="t-desc">Encrypted DNS queries</div></div>
-          <div class="sw off" onclick="toggle(this)"></div>
-        </div>
-        <div class="p-section" style="margin-top:6px">Session</div>
-        <div class="t-row">
-          <div class="t-ico ico-a"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3.5 6V4.5a3 3 0 0 1 6 0V6" stroke="#d97706" stroke-width="1.2"/><rect x="2.5" y="6" width="8" height="5" rx="1.5" stroke="#d97706" stroke-width="1.2"/></svg></div>
-          <div class="t-info"><div class="t-name">Private Session</div><div class="t-desc">No history recorded</div></div>
-          <div class="sw off" onclick="toggle(this)"></div>
-        </div>
-      </div>
-
-      <!-- Wrapper body -->
-      <div class="panel-body" id="pb-wrap" style="display:none">
-        <div class="p-section">Engine</div>
-        <div class="b-opt sel-native" onclick="pickEngine(this,'native','VectisX Native')">
-          <div class="b-logo" style="background:rgba(74,63,224,0.1)">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0.5 13.5,3.5 13.5,10.5 7,13.5 0.5,10.5 0.5,3.5" fill="none" stroke="#4a3fe0" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" fill="#4a3fe0"/></svg>
+          <div class="panel-section">
+            <div class="panel-section-title">Performance</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Smart Preload</div><div class="panel-row-sub">Prefetch likely links</div></div>
+              <button class="toggle on" id="tog-preload" onclick="doToggle(this,'Smart Preload')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Data Saver</div><div class="panel-row-sub">Compress images</div></div>
+              <button class="toggle" id="tog-datasaver" onclick="doToggle(this,'Data Saver')"></button>
+            </div>
           </div>
-          <div><div class="b-name">VectisX Native</div><div class="b-sub">Standalone Chromium</div></div>
-          <div class="b-chk yn" id="chk-native"><svg width="8" height="8" viewBox="0 0 8 8"><polyline points="1.5,4 3.5,6 6.5,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </div>
-        <div class="b-opt" onclick="pickEngine(this,'brave','Brave Browser')">
-          <div class="b-logo" style="background:rgba(234,88,12,0.08)">🦁</div>
-          <div><div class="b-name">Brave</div><div class="b-sub">Shields + extensions</div></div>
-          <div class="b-chk n" id="chk-brave"></div>
-        </div>
-        <div class="b-opt" onclick="pickEngine(this,'firefox','Firefox Engine')">
-          <div class="b-logo" style="background:rgba(234,88,12,0.06)">🦊</div>
-          <div><div class="b-name">Firefox</div><div class="b-sub">Gecko engine wrapper</div></div>
-          <div class="b-chk n" id="chk-firefox"></div>
-        </div>
-        <div class="b-opt" onclick="pickEngine(this,'chrome','Chrome Engine')">
-          <div class="b-logo" style="background:rgba(22,163,74,0.08)">🌐</div>
-          <div><div class="b-name">Chrome</div><div class="b-sub">V8 + Chrome profile</div></div>
-          <div class="b-chk n" id="chk-chrome"></div>
-        </div>
-        <div class="b-opt" onclick="pickEngine(this,'arc','Arc Browser')">
-          <div class="b-logo" style="background:rgba(6,182,212,0.08)">🌊</div>
-          <div><div class="b-name">Arc</div><div class="b-sub">Import spaces + tabs</div></div>
-          <div class="b-chk n" id="chk-arc"></div>
-        </div>
-        <div class="p-section" style="margin-top:6px">Import</div>
-        <div class="t-row" style="cursor:pointer">
-          <div class="t-ico ico-p"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="2" x2="6.5" y2="9" stroke="#7c6ff7" stroke-width="1.3" stroke-linecap="round"/><polyline points="4,6.5 6.5,9 9,6.5" stroke="#7c6ff7" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="11" x2="11" y2="11" stroke="#7c6ff7" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-          <div class="t-info"><div class="t-name">Import Profile</div><div class="t-desc">Bookmarks, history, passwords</div></div>
-        </div>
-        <div class="t-row" style="cursor:pointer">
-          <div class="t-ico ico-g"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="2" y="2" width="9" height="9" rx="1.5" stroke="#16a34a" stroke-width="1.2"/><line x1="6.5" y1="4.5" x2="6.5" y2="8.5" stroke="#16a34a" stroke-width="1.3" stroke-linecap="round"/><line x1="4.5" y1="6.5" x2="8.5" y2="6.5" stroke="#16a34a" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-          <div class="t-info"><div class="t-name">Sync Extensions</div><div class="t-desc">Load from chosen browser</div></div>
         </div>
       </div>
-    </div>
 
-  </div>
+      <!-- History Panel -->
+      <div class="panel" id="panel-history">
+        <div class="panel-header">
+          <span class="panel-title">History</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body" id="historyList">
+          <div class="panel-section-title" style="margin-bottom:10px">Today</div>
+          <!-- filled by JS -->
+        </div>
+      </div>
 
-  <!-- STATUS BAR -->
-  <div class="statusbar">
-    <div class="st-item"><div class="st-dot d-g"></div>Secure</div>
-    <div class="st-item"><div class="st-dot d-p"></div>VPN · Mumbai</div>
-    <div class="st-item"><div class="st-dot d-a"></div>Shield · Active</div>
-    <div class="st-sep"></div>
-    <div class="st-engine" id="eng-lbl">
-      <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,3 9.5,7 5,9.5 0.5,7 0.5,3" fill="none" stroke="#4a3fe0" stroke-width="1"/><circle cx="5" cy="5" r="1.5" fill="#4a3fe0"/></svg>
-      VectisX Native
-    </div>
-  </div>
+      <!-- Bookmarks Panel -->
+      <div class="panel" id="panel-bookmarks">
+        <div class="panel-header">
+          <span class="panel-title">Bookmarks</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body" id="bookmarkList">
+          <!-- filled by JS -->
+        </div>
+      </div>
 
-</div>
+      <!-- Downloads Panel -->
+      <div class="panel" id="panel-downloads">
+        <div class="panel-header">
+          <span class="panel-title">Downloads</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body" id="downloadList">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Notes Panel -->
+      <div class="panel" id="panel-notes">
+        <div class="panel-header">
+          <span class="panel-title">Notes</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body" style="display:flex;flex-direction:column">
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:8px">
+            Saved locally &bull; Private &amp; encrypted
+          </div>
+          <textarea class="notes-area" id="notesArea" placeholder="Write anything...&#10;Your notes are saved locally."></textarea>
+          <div class="notes-buttons">
+            <button class="btn-primary" onclick="saveNote()">Save Note</button>
+            <button class="btn-ghost" onclick="clearNote()">Clear</button>
+          </div>
+          <div id="notesSavedAt" style="font-size:11px;color:var(--txt3);margin-top:8px;text-align:center"></div>
+        </div>
+      </div>
+
+      <!-- Settings Panel -->
+      <div class="panel" id="panel-settings">
+        <div class="panel-header">
+          <span class="panel-title">Settings</span>
+          <button class="panel-close" onclick="closePanel()">&#215;</button>
+        </div>
+        <div class="panel-body">
+          <div class="settings-group">
+            <div class="settings-group-title">Appearance</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Theme</div><div class="panel-row-sub" id="themeLabel">Light</div></div>
+              <button class="btn-ghost" style="flex:none;padding:0 14px;height:30px;font-size:12px" onclick="cycleTheme()">Change</button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Compact Mode</div><div class="panel-row-sub">Reduce UI spacing</div></div>
+              <button class="toggle" id="tog-compact" onclick="doToggle(this,'Compact Mode')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Tab Preview</div><div class="panel-row-sub">Show page thumbnails</div></div>
+              <button class="toggle on" id="tog-tabpreview" onclick="doToggle(this,'Tab Preview')"></button>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title">Privacy</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Do Not Track</div><div class="panel-row-sub">Send DNT header</div></div>
+              <button class="toggle on" id="tog-dnt" onclick="doToggle(this,'Do Not Track')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Clear on Exit</div><div class="panel-row-sub">Wipe data on close</div></div>
+              <button class="toggle" id="tog-clearonexit" onclick="doToggle(this,'Clear on Exit')"></button>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title">Notifications</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Toast Alerts</div><div class="panel-row-sub">Show action toasts</div></div>
+              <button class="toggle on" id="tog-toasts" onclick="doToggle(this,'Toast Alerts')"></button>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title">Advanced</div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Hardware Acceleration</div><div class="panel-row-sub">Use GPU rendering</div></div>
+              <button class="toggle on" id="tog-gpu" onclick="doToggle(this,'Hardware Acceleration')"></button>
+            </div>
+            <div class="panel-row">
+              <div><div class="panel-row-label">Dev Tools</div><div class="panel-row-sub">Enable inspector</div></div>
+              <button class="toggle" id="tog-devtools" onclick="doToggle(this,'Dev Tools')"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-area -->
+
+    <!-- Content Area -->
+    <div class="content-area" id="contentArea">
+
+      <!-- New Tab Page -->
+      <div class="new-tab" id="newTabPage">
+
+        <!-- Crimson Hex Logo (shown only in crimson theme) -->
+        <div class="hex-logo-wrap" id="hexLogoWrap">
+          <svg width="120" height="138" viewBox="0 0 120 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <linearGradient id="hexGrad" x1="60" y1="0" x2="60" y2="138" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#e83030"/>
+                <stop offset="100%" stop-color="#7a0000"/>
+              </linearGradient>
+              <linearGradient id="vGrad" x1="40" y1="30" x2="80" y2="100" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#ffc0c0"/>
+              </linearGradient>
+              <linearGradient id="hexStroke" x1="0" y1="0" x2="120" y2="138" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ff4444"/>
+                <stop offset="100%" stop-color="#aa0000"/>
+              </linearGradient>
+            </defs>
+            <!-- Hex body -->
+            <path d="M60 4 L112 32 L112 88 L60 116 L8 88 L8 32 Z"
+              fill="url(#hexGrad)" stroke="url(#hexStroke)" stroke-width="2.5"
+              filter="url(#glow)" opacity="0.95"/>
+            <!-- Inner hex ring -->
+            <path d="M60 14 L104 38 L104 82 L60 106 L16 82 L16 38 Z"
+              fill="none" stroke="rgba(255,100,100,0.3)" stroke-width="1"/>
+            <!-- V letterform -->
+            <path d="M36 38 L57 88 L60 94 L63 88 L84 38" 
+              stroke="url(#vGrad)" stroke-width="9" stroke-linecap="round" 
+              stroke-linejoin="round" fill="none" filter="url(#glow)"/>
+            <!-- V accent dot -->
+            <circle cx="60" cy="96" r="3.5" fill="#ffc0c0" opacity="0.8"/>
+            <!-- Decorative corner sparks -->
+            <line x1="8" y1="60" x2="2" y2="60" stroke="#c81c1c" stroke-width="1.5" opacity="0.6"/>
+            <line x1="112" y1="60" x2="118" y2="60" stroke="#c81c1c" stroke-width="1.5" opacity="0.6"/>
+            <line x1="60" y1="4" x2="60" y2="0" stroke="#c81c1c" stroke-width="1.5" opacity="0.6"/>
+          </svg>
+          <div class="hex-logo-text">
+            <div class="hex-logo-title">VectisX</div>
+            <div class="hex-logo-subtitle">Red Crimson</div>
+          </div>
+        </div>
+
+        <!-- Clock (light + dark only) -->
+        <div class="clock-wrap" id="clockWrap">
+          <div class="clock-time" id="clockTime">00:00</div>
+          <div class="clock-date" id="clockDate">Loading...</div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="nt-search-wrap">
+          <input type="text" class="nt-search-input" id="ntSearch"
+            placeholder="Search the web..."
+            onkeydown="onNtSearchKey(event)" autocomplete="off" spellcheck="false">
+          <button class="nt-search-btn" onclick="doNtSearch()">&#8594;</button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row" id="statsRow">
+          <div class="stat-chip">&#128683; <span id="ntStatAds" class="stat-num">1,247</span> ads blocked</div>
+          <div class="stat-chip">&#128065; <span id="ntStatTrackers" class="stat-num">389</span> trackers</div>
+          <div class="stat-chip">&#9203; <span id="ntStatTime" class="stat-num">18.4s</span> saved</div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+          <div class="quick-link" onclick="navigate('https://google.com')">
+            <span class="quick-link-icon">&#127758;</span>
+            <span class="quick-link-label">Google</span>
+          </div>
+          <div class="quick-link" onclick="navigate('https://github.com')">
+            <span class="quick-link-icon">&#129409;</span>
+            <span class="quick-link-label">GitHub</span>
+          </div>
+          <div class="quick-link" onclick="navigate('https://youtube.com')">
+            <span class="quick-link-icon">&#9654;</span>
+            <span class="quick-link-label">YouTube</span>
+          </div>
+          <div class="quick-link" onclick="navigate('https://reddit.com')">
+            <span class="quick-link-icon">&#128172;</span>
+            <span class="quick-link-label">Reddit</span>
+          </div>
+          <div class="quick-link" onclick="navigate('https://twitter.com')">
+            <span class="quick-link-icon">&#10084;</span>
+            <span class="quick-link-label">Twitter</span>
+          </div>
+        </div>
+
+      </div><!-- /new-tab -->
+
+      <!-- Browser iframe -->
+      <iframe class="browser-frame" id="browserFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+
+    </div><!-- /content-area -->
+
+  </div><!-- /body-area -->
+
+</div><!-- /app -->
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ── CLOCK ──
-function tick(){
-  const n=new Date();
-  document.getElementById('clock').textContent=
-    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
-  const D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('datestr').textContent=
-    D[n.getDay()].toUpperCase()+'  ·  '+n.getDate()+' '+M[n.getMonth()].toUpperCase()+' '+n.getFullYear();
+/* ── State ───────────────────────────────────────────── */
+var state = {
+  theme: 'light',
+  themes: ['light','dark','crimson'],
+  themeLabels: ['Light','Dark','Crimson'],
+  vpnOn: false,
+  readerOn: false,
+  shieldOn: false,
+  activePanel: null,
+  engine: 'Google',
+  tabs: [],
+  activeTab: 0,
+  toastsEnabled: true,
+};
+
+var engines = {
+  Google: 'https://www.google.com/search?q=',
+  Bing: 'https://www.bing.com/search?q=',
+  DuckDuckGo: 'https://duckduckgo.com/?q=',
+  Brave: 'https://search.brave.com/search?q=',
+  Ecosia: 'https://www.ecosia.org/search?q=',
+  Kagi: 'https://kagi.com/search?q=',
+};
+
+/* ── Tabs ────────────────────────────────────────────── */
+function createTab(title, url, favicon) {
+  return {
+    id: Date.now() + Math.random(),
+    title: title || 'New Tab',
+    url: url || '',
+    favicon: favicon || '&#127760;',
+    history: [],
+    historyIndex: -1,
+  };
 }
-tick(); setInterval(tick,20000);
 
-// ── COUNTERS ──
-let tc=2847,ac=491;
-setInterval(()=>{
-  tc+=Math.floor(Math.random()*3);
-  ac+=Math.random()>.72?1:0;
-  document.getElementById('tc').textContent=tc.toLocaleString();
-  document.getElementById('ac').textContent=ac.toLocaleString();
-},2400);
+function addTab(title, url) {
+  var tab = createTab(title, url);
+  state.tabs.push(tab);
+  state.activeTab = state.tabs.length - 1;
+  renderTabs();
+  showNewTabPage();
+  updateNavButtons();
+  if (url) navigate(url);
+}
 
-// ── TAB SWITCHING ──
-function switchTab(tab,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.pview, .newtab').forEach(v=>{v.style.display='none'});
-  const ribbon=document.getElementById('ribbon');
-  const ot=document.getElementById('omni-txt');
-  const oc=document.getElementById('omni-chips');
-  if(tab==='newtab'){
-    document.getElementById('view-newtab').style.display='flex';
-    ribbon.style.display='none';
-    ot.innerHTML='<b>vectis</b>://newtab';
-    oc.innerHTML='<span class="chip chip-s">Shield</span><span class="chip chip-v">VPN</span>';
-  } else if(tab==='privacy'){
-    document.getElementById('view-privacy').style.display='flex';
-    ribbon.style.display='none';
-    ot.innerHTML='https://<b>github.com</b>/dashboard';
-    oc.innerHTML='<span class="chip chip-s">Shield</span><span class="chip chip-v">VPN</span>';
-  } else if(tab==='wrapper'){
-    document.getElementById('view-wrapper').style.display='flex';
-    ribbon.style.display='flex';
-    ot.innerHTML='https://<b>search.brave.com</b>/';
-    oc.innerHTML='<span class="chip chip-b">Brave</span><span class="chip chip-v">VPN</span>';
+function closeTab(idx) {
+  if (state.tabs.length <= 1) {
+    toast('Cannot close last tab','warn');
+    return;
   }
+  state.tabs.splice(idx, 1);
+  if (state.activeTab >= state.tabs.length) state.activeTab = state.tabs.length - 1;
+  renderTabs();
+  showNewTabPage();
+  updateNavButtons();
+  toast('Tab closed','info');
 }
 
-// ── PANEL ──
-function setPanel(p){
-  document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('on'));
-  const btn=document.getElementById('sb-'+p);
-  if(btn)btn.classList.add('on');
-  setPanelTab(p==='wrapper'?'wrap':'priv');
-}
-function setPanelTab(tab){
-  document.getElementById('pb-priv').style.display=tab==='priv'?'flex':'none';
-  document.getElementById('pb-wrap').style.display=tab==='wrap'?'flex':'none';
-  document.getElementById('ptab-priv').classList.toggle('on',tab==='priv');
-  document.getElementById('ptab-wrap').classList.toggle('on',tab==='wrap');
-  if(tab==='wrap'){
-    document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('on'));
-    document.getElementById('sb-wrapper').classList.add('on');
-  }
-}
-
-// ── ENGINE PICKER ──
-const engines=['native','brave','firefox','chrome','arc'];
-const labels={native:'VectisX Native',brave:'Brave Browser',firefox:'Firefox Engine',chrome:'Chrome Engine',arc:'Arc Browser'};
-function pickEngine(row,key,label){
-  engines.forEach(e=>{
-    const c=document.getElementById('chk-'+e);
-    c.className='b-chk n'; c.innerHTML='';
-  });
-  document.querySelectorAll('.b-opt').forEach(o=>{o.classList.remove('sel','sel-native')});
-  row.classList.add(key==='native'?'sel-native':'sel');
-  const chk=document.getElementById('chk-'+key);
-  chk.className='b-chk '+(key==='native'?'yn':'y');
-  chk.innerHTML='<svg width="8" height="8" viewBox="0 0 8 8"><polyline points="1.5,4 3.5,6 6.5,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const ribbon=document.getElementById('ribbon');
-  const rt=document.getElementById('ribbon-txt');
-  const wvt=document.getElementById('wv-title');
-  document.getElementById('eng-lbl').innerHTML=
-    '<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,3 9.5,7 5,9.5 0.5,7 0.5,3" fill="none" stroke="#4a3fe0" stroke-width="1"/><circle cx="5" cy="5" r="1.5" fill="#4a3fe0"/></svg> '+label;
-  if(key!=='native'){
-    ribbon.style.display='flex';
-    rt.textContent='Wrapper Mode — '+label;
-    wvt.textContent=label+' Active';
+function switchTab(idx) {
+  state.activeTab = idx;
+  renderTabs();
+  var tab = state.tabs[idx];
+  if (tab.url) {
+    document.getElementById('urlBar').value = tab.url;
+    showBrowserFrame();
   } else {
-    ribbon.style.display='none';
+    document.getElementById('urlBar').value = '';
+    showNewTabPage();
+  }
+  updateNavButtons();
+}
+
+function renderTabs() {
+  var bar = document.getElementById('tabBar');
+  // Keep the + button
+  var addBtn = bar.querySelector('.tab-add');
+  // Remove old tabs
+  Array.from(bar.querySelectorAll('.tab')).forEach(function(t){ t.remove(); });
+  state.tabs.forEach(function(tab, i) {
+    var el = document.createElement('div');
+    el.className = 'tab' + (i === state.activeTab ? ' active' : '');
+    el.innerHTML =
+      '<span class="tab-favicon">' + tab.favicon + '</span>' +
+      '<span class="tab-title">' + escHtml(tab.title) + '</span>' +
+      '<button class="tab-close" onclick="event.stopPropagation();closeTab(' + i + ')">&#215;</button>';
+    el.onclick = function(){ switchTab(i); };
+    bar.insertBefore(el, addBtn);
+  });
+}
+
+/* ── Navigation ─────────────────────────────────────── */
+function navigate(url) {
+  if (!url) return;
+  var cleaned = url.trim();
+  if (!cleaned) return;
+  // Determine if it's a URL or search query
+  var isUrl = /^https?:\/\//i.test(cleaned) || /^[a-z0-9-]+\.[a-z]{2,}/i.test(cleaned);
+  if (!isUrl) {
+    cleaned = (engines[state.engine] || engines.Google) + encodeURIComponent(cleaned);
+  } else if (!/^https?:\/\//i.test(cleaned)) {
+    cleaned = 'https://' + cleaned;
+  }
+  document.getElementById('urlBar').value = cleaned;
+  var tab = state.tabs[state.activeTab];
+  if (tab) {
+    // Push to tab history
+    tab.history.splice(tab.historyIndex + 1);
+    tab.history.push(cleaned);
+    tab.historyIndex = tab.history.length - 1;
+    tab.url = cleaned;
+    // Extract domain for tab title
+    try {
+      var u = new URL(cleaned);
+      tab.title = u.hostname.replace('www.','');
+      tab.favicon = '&#127760;';
+    } catch(e) {
+      tab.title = cleaned.substring(0,28);
+    }
+    renderTabs();
+  }
+  showBrowserFrame();
+  flashPage();
+  updateNavButtons();
+  var frame = document.getElementById('browserFrame');
+  try { frame.src = cleaned; } catch(e) {}
+  addHistoryEntry(tab ? tab.title : cleaned, cleaned);
+}
+
+function goBack() {
+  var tab = state.tabs[state.activeTab];
+  if (!tab || tab.historyIndex <= 0) return;
+  tab.historyIndex--;
+  var url = tab.history[tab.historyIndex];
+  tab.url = url;
+  document.getElementById('urlBar').value = url;
+  try { document.getElementById('browserFrame').src = url; } catch(e){}
+  flashPage();
+  updateNavButtons();
+}
+
+function goForward() {
+  var tab = state.tabs[state.activeTab];
+  if (!tab || tab.historyIndex >= tab.history.length - 1) return;
+  tab.historyIndex++;
+  var url = tab.history[tab.historyIndex];
+  tab.url = url;
+  document.getElementById('urlBar').value = url;
+  try { document.getElementById('browserFrame').src = url; } catch(e){}
+  flashPage();
+  updateNavButtons();
+}
+
+function refresh() {
+  var btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  setTimeout(function(){ btn.classList.remove('spinning'); }, 520);
+  var tab = state.tabs[state.activeTab];
+  if (tab && tab.url) {
+    flashPage();
+    try { document.getElementById('browserFrame').src = document.getElementById('browserFrame').src; } catch(e){}
+    toast('Page refreshed','info');
   }
 }
 
-// ── TOGGLE ──
-function toggle(el){
-  el.classList.toggle('on');
-  el.classList.toggle('off');
+function updateNavButtons() {
+  var tab = state.tabs[state.activeTab];
+  var backBtn = document.getElementById('backBtn');
+  var fwdBtn = document.getElementById('fwdBtn');
+  if (!tab) { backBtn.disabled = true; fwdBtn.disabled = true; return; }
+  backBtn.disabled = tab.historyIndex <= 0;
+  fwdBtn.disabled = tab.historyIndex >= tab.history.length - 1;
 }
 
-// ── REFRESH SPIN ──
-function spinRefresh(){
-  const ico=document.getElementById('rico');
-  ico.style.transition='transform 0.5s cubic-bezier(.4,0,.2,1)';
-  ico.style.transform='rotate(360deg)';
-  setTimeout(()=>{ico.style.transition='';ico.style.transform='';},520);
+function onUrlKey(e) {
+  if (e.key === 'Enter') {
+    navigate(document.getElementById('urlBar').value);
+  }
 }
+
+function onNtSearchKey(e) {
+  if (e.key === 'Enter') doNtSearch();
+}
+
+function doNtSearch() {
+  var q = document.getElementById('ntSearch').value.trim();
+  if (q) { navigate(q); document.getElementById('ntSearch').value = ''; }
+}
+
+/* ── Page State ─────────────────────────────────────── */
+function showNewTabPage() {
+  document.getElementById('newTabPage').style.display = 'flex';
+  document.getElementById('browserFrame').classList.remove('visible');
+}
+
+function showBrowserFrame() {
+  document.getElementById('newTabPage').style.display = 'none';
+  document.getElementById('browserFrame').classList.add('visible');
+}
+
+function flashPage() {
+  var ca = document.getElementById('contentArea');
+  var old = ca.querySelector('.page-flash');
+  if (old) old.remove();
+  var fl = document.createElement('div');
+  fl.className = 'page-flash';
+  ca.appendChild(fl);
+  setTimeout(function(){ if (fl.parentNode) fl.parentNode.removeChild(fl); }, 400);
+}
+
+/* ── Traffic Lights ─────────────────────────────────── */
+function tlAction(color) {
+  var ids = { red:'tlRed', yellow:'tlYellow', green:'tlGreen' };
+  var msgs = { red:'Window closed', yellow:'Minimized to dock', green:'Entered fullscreen' };
+  var el = document.getElementById(ids[color]);
+  el.classList.add('animating');
+  setTimeout(function(){ el.classList.remove('animating'); }, 420);
+  toast(msgs[color], color === 'red' ? 'warn' : 'info');
+  if (color === 'green') {
+    var app = document.getElementById('app');
+    if (document.fullscreenElement) document.exitFullscreen();
+    else app.requestFullscreen && app.requestFullscreen();
+  }
+}
+
+/* ── Theme ──────────────────────────────────────────── */
+function cycleTheme() {
+  var idx = state.themes.indexOf(state.theme);
+  idx = (idx + 1) % state.themes.length;
+  state.theme = state.themes[idx];
+  applyTheme();
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  var label = state.themeLabels[state.themes.indexOf(state.theme)];
+  document.getElementById('themeBtn').textContent = label;
+  var tl = document.getElementById('themeLabel');
+  if (tl) tl.textContent = label;
+  toast('Theme: ' + label, 'info');
+}
+
+/* ── VPN ─────────────────────────────────────────────── */
+function toggleVPN() {
+  state.vpnOn = !state.vpnOn;
+  var btn = document.getElementById('vpnBtn');
+  var togPanel = document.getElementById('tog-vpn');
+  var statusText = document.getElementById('vpnStatusText');
+  if (state.vpnOn) {
+    btn.classList.add('vpn-on');
+    if (togPanel) { togPanel.classList.add('on'); }
+    if (statusText) statusText.textContent = 'Connected — US-West';
+    toast('VPN Connected — US-West', 'success');
+  } else {
+    btn.classList.remove('vpn-on');
+    if (togPanel) { togPanel.classList.remove('on'); }
+    if (statusText) statusText.textContent = 'Disconnected';
+    toast('VPN Disconnected', 'warn');
+  }
+}
+
+function toggleVPNPanel() {
+  var tog = document.getElementById('tog-vpn');
+  var isOn = tog.classList.contains('on');
+  // Keep in sync
+  if (isOn !== state.vpnOn) {
+    toggleVPN();
+  } else {
+    toggleVPN();
+  }
+}
+
+/* ── Reader / Shield ─────────────────────────────────── */
+function toggleReader() {
+  state.readerOn = !state.readerOn;
+  var btn = document.getElementById('readerBtn');
+  btn.classList.toggle('active', state.readerOn);
+  toast('Reader Mode ' + (state.readerOn ? 'On' : 'Off'), 'info');
+}
+
+function toggleShield() {
+  state.shieldOn = !state.shieldOn;
+  var btn = document.getElementById('shieldBtn');
+  btn.classList.toggle('active', state.shieldOn);
+  toast('Shield ' + (state.shieldOn ? 'Enabled' : 'Disabled'), state.shieldOn ? 'success' : 'warn');
+}
+
+/* ── Dropdown Menu ──────────────────────────────────── */
+function toggleMenu() {
+  var dd = document.getElementById('dropdown');
+  dd.classList.toggle('open');
+}
+
+function closeMenu() {
+  document.getElementById('dropdown').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('dropdown');
+  var menuBtn = document.getElementById('menuBtn');
+  if (dd.classList.contains('open') && !dd.contains(e.target) && e.target !== menuBtn) {
+    closeMenu();
+  }
+});
+
+/* ── Sidebar & Panels ───────────────────────────────── */
+function togglePanel(name) {
+  if (state.activePanel === name) {
+    closePanel();
+  } else {
+    openPanel(name);
+  }
+}
+
+function openPanel(name) {
+  // Hide all panels
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('visible'); });
+  document.querySelectorAll('.sb-icon').forEach(function(i){ i.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + name);
+  var iconEl = document.getElementById('sb-' + name);
+  if (!panel) return;
+  panel.classList.add('visible');
+  if (iconEl) iconEl.classList.add('active');
+  document.getElementById('panelArea').classList.add('open');
+  state.activePanel = name;
+}
+
+function closePanel() {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('visible'); });
+  document.querySelectorAll('.sb-icon').forEach(function(i){ i.classList.remove('active'); });
+  document.getElementById('panelArea').classList.remove('open');
+  state.activePanel = null;
+}
+
+/* ── Toggle Switches ────────────────────────────────── */
+function doToggle(el, label) {
+  el.classList.toggle('on');
+  var on = el.classList.contains('on');
+  if (label === 'Toast Alerts') { state.toastsEnabled = on; }
+  toast(label + ' ' + (on ? 'enabled' : 'disabled'), on ? 'success' : 'info');
+}
+
+/* ── Engine Picker ──────────────────────────────────── */
+function pickEngine(btn) {
+  document.querySelectorAll('.engine-btn').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  state.engine = btn.getAttribute('data-engine');
+  toast('Search engine: ' + state.engine, 'info');
+}
+
+/* ── Notes ──────────────────────────────────────────── */
+function saveNote() {
+  var text = document.getElementById('notesArea').value;
+  try { localStorage.setItem('vx_notes', text); } catch(e){}
+  var now = new Date();
+  var saved = document.getElementById('notesSavedAt');
+  if (saved) saved.textContent = 'Saved at ' + now.toLocaleTimeString();
+  toast('Note saved', 'success');
+}
+
+function clearNote() {
+  document.getElementById('notesArea').value = '';
+  try { localStorage.removeItem('vx_notes'); } catch(e){}
+  var saved = document.getElementById('notesSavedAt');
+  if (saved) saved.textContent = '';
+  toast('Note cleared', 'info');
+}
+
+function loadNotes() {
+  try {
+    var notes = localStorage.getItem('vx_notes');
+    if (notes) document.getElementById('notesArea').value = notes;
+  } catch(e){}
+}
+
+/* ── History Panel ──────────────────────────────────── */
+var historyEntries = [
+  { title: 'GitHub', url: 'https://github.com', time: '2 min ago', icon: '&#129409;' },
+  { title: 'Google Search', url: 'https://google.com', time: '14 min ago', icon: '&#127758;' },
+  { title: 'YouTube', url: 'https://youtube.com', time: '1 hr ago', icon: '&#9654;' },
+  { title: 'Reddit', url: 'https://reddit.com', time: '2 hrs ago', icon: '&#128172;' },
+  { title: 'Hacker News', url: 'https://news.ycombinator.com', time: '3 hrs ago', icon: '&#128240;' },
+];
+
+function addHistoryEntry(title, url) {
+  historyEntries.unshift({ title: title, url: url, time: 'Just now', icon: '&#127760;' });
+  if (historyEntries.length > 20) historyEntries.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  var list = document.getElementById('historyList');
+  if (!list) return;
+  list.innerHTML = '<div class="panel-section-title" style="margin-bottom:10px">Today</div>';
+  historyEntries.slice(0,10).forEach(function(h) {
+    var el = document.createElement('div');
+    el.className = 'list-item';
+    el.innerHTML =
+      '<div class="list-item-icon">' + h.icon + '</div>' +
+      '<div class="list-item-info">' +
+        '<div class="list-item-title">' + escHtml(h.title) + '</div>' +
+        '<div class="list-item-sub">' + escHtml(h.time) + '</div>' +
+      '</div>';
+    el.onclick = function(){ navigate(h.url); };
+    list.appendChild(el);
+  });
+}
+
+/* ── Bookmarks ──────────────────────────────────────── */
+var bookmarks = [
+  { title: 'GitHub', url: 'https://github.com', icon: '&#129409;' },
+  { title: 'Google', url: 'https://google.com', icon: '&#127758;' },
+  { title: 'YouTube', url: 'https://youtube.com', icon: '&#9654;' },
+  { title: 'Hacker News', url: 'https://news.ycombinator.com', icon: '&#128240;' },
+  { title: 'MDN Web Docs', url: 'https://developer.mozilla.org', icon: '&#128218;' },
+  { title: 'Stack Overflow', url: 'https://stackoverflow.com', icon: '&#128187;' },
+];
+
+function renderBookmarks() {
+  var list = document.getElementById('bookmarkList');
+  if (!list) return;
+  bookmarks.forEach(function(b) {
+    var el = document.createElement('div');
+    el.className = 'list-item';
+    el.innerHTML =
+      '<div class="list-item-icon">' + b.icon + '</div>' +
+      '<div class="list-item-info">' +
+        '<div class="list-item-title">' + escHtml(b.title) + '</div>' +
+        '<div class="list-item-sub">' + escHtml(b.url) + '</div>' +
+      '</div>';
+    el.onclick = function(){ navigate(b.url); };
+    list.appendChild(el);
+  });
+}
+
+/* ── Downloads ──────────────────────────────────────── */
+var downloads = [
+  { name: 'VectisX-Setup.dmg', size: '48.2 MB', pct: 100, icon: '&#128190;' },
+  { name: 'report-q4-2024.pdf', size: '2.1 MB', pct: 100, icon: '&#128196;' },
+  { name: 'project-assets.zip', size: '124 MB', pct: 67, icon: '&#128230;' },
+  { name: 'wallpaper-4k.png', size: '8.4 MB', pct: 100, icon: '&#128247;' },
+];
+
+function renderDownloads() {
+  var list = document.getElementById('downloadList');
+  if (!list) return;
+  downloads.forEach(function(d) {
+    var el = document.createElement('div');
+    el.className = 'list-item';
+    el.style.flexDirection = 'column';
+    el.style.alignItems = 'flex-start';
+    el.innerHTML =
+      '<div style="display:flex;align-items:center;gap:10px;width:100%">' +
+        '<div class="list-item-icon">' + d.icon + '</div>' +
+        '<div class="list-item-info">' +
+          '<div class="list-item-title">' + escHtml(d.name) + '</div>' +
+          '<div class="list-item-sub">' + d.size + (d.pct < 100 ? ' &bull; ' + d.pct + '%' : ' &bull; Done') + '</div>' +
+        '</div>' +
+      '</div>' +
+      (d.pct < 100 ?
+        '<div class="dl-progress" style="width:100%;margin-left:42px;width:calc(100% - 42px)">' +
+          '<div class="dl-bar" style="width:' + d.pct + '%"></div>' +
+        '</div>' : '');
+    list.appendChild(el);
+  });
+}
+
+/* ── Toast ──────────────────────────────────────────── */
+function toast(msg, type) {
+  if (!state.toastsEnabled) return;
+  var icons = { info: '&#9432;', success: '&#10003;', warn: '&#9888;', error: '&#9747;' };
+  var colors = { info: 'var(--accent)', success: 'var(--green)', warn: 'var(--amber)', error: 'var(--orange)' };
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML =
+    '<span class="toast-icon" style="color:' + (colors[type] || colors.info) + '">' +
+      (icons[type] || icons.info) + '</span>' +
+    '<span class="toast-msg">' + escHtml(msg) + '</span>' +
+    '<button class="toast-close" onclick="dismissToast(this)">&#215;</button>';
+  var container = document.getElementById('toastContainer');
+  container.appendChild(t);
+  // auto-remove
+  var timer = setTimeout(function() { dismissToast(t.querySelector('.toast-close')); }, 3200);
+  t._timer = timer;
+}
+
+function dismissToast(closeBtn) {
+  var t = closeBtn.closest ? closeBtn.closest('.toast') : closeBtn.parentNode;
+  if (!t || t.classList.contains('out')) return;
+  clearTimeout(t._timer);
+  t.classList.add('out');
+  setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 300);
+}
+
+/* ── Clock ──────────────────────────────────────────── */
+function updateClock() {
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2,'0');
+  var m = String(now.getMinutes()).padStart(2,'0');
+  var timeEl = document.getElementById('clockTime');
+  var dateEl = document.getElementById('clockDate');
+  if (timeEl) timeEl.textContent = h + ':' + m;
+  if (dateEl) {
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+    dateEl.textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  }
+}
+
+/* ── Stats Counter ──────────────────────────────────── */
+var statCounters = { ads: 1247, trackers: 389, timeSaved: 18.4 };
+
+function bumpStats() {
+  var delta = Math.floor(Math.random() * 3) + 1;
+  statCounters.ads += delta;
+  statCounters.trackers += Math.random() > .6 ? 1 : 0;
+  statCounters.timeSaved = Math.round((statCounters.timeSaved + delta * 0.07) * 10) / 10;
+
+  function animateNum(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = typeof val === 'number' && val > 999 ? val.toLocaleString() : val;
+    el.classList.remove('bump');
+    void el.offsetWidth; // reflow
+    el.classList.add('bump');
+    setTimeout(function(){ el.classList.remove('bump'); }, 400);
+  }
+
+  animateNum('statAds', statCounters.ads);
+  animateNum('statTrackers', statCounters.trackers);
+  animateNum('ntStatAds', statCounters.ads);
+  animateNum('ntStatTrackers', statCounters.trackers);
+  animateNum('ntStatTime', statCounters.timeSaved + 's');
+}
+
+/* ── Utility ─────────────────────────────────────────── */
+function escHtml(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+/* ── Init ────────────────────────────────────────────── */
+function init() {
+  // Create first tab
+  addTab('New Tab', '');
+
+  // Render panels
+  renderHistory();
+  renderBookmarks();
+  renderDownloads();
+  loadNotes();
+
+  // Clock
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Stats
+  setInterval(bumpStats, 2400);
+
+  // Initial toast
+  setTimeout(function(){ toast('Welcome to VectisX','info'); }, 600);
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
