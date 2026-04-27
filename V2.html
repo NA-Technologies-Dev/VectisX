@@ -1429,6 +1429,10 @@ function dismissToast(closeBtn) {
 }
 
 /* ── Clock ──────────────────────────────────────────── */
+var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
+
 function updateClock() {
   var now = new Date();
   var h = String(now.getHours()).padStart(2,'0');
@@ -1437,10 +1441,7 @@ function updateClock() {
   var dateEl = document.getElementById('clockDate');
   if (timeEl) timeEl.textContent = h + ':' + m;
   if (dateEl) {
-    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var months = ['January','February','March','April','May','June',
-                  'July','August','September','October','November','December'];
-    dateEl.textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+    dateEl.textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
   }
 }
 
