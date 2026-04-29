@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VectisX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --radius-xl: 22px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 10px;
+    --shadow-soft: 0 12px 28px rgba(0,0,0,.08);
+    --shadow-strong: 0 24px 60px rgba(0,0,0,.22);
+    --focus-ring: 0 0 0 4px rgba(200,28,28,.16);
+    --ease-out: cubic-bezier(.22,1,.36,1);
+    --ease-snap: cubic-bezier(.34,1.56,.64,1);
+    --chrome-h: 122px;
+    --sidebar-w: 68px;
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f6f8;
+    --bg-elev: #ffffff;
+    --surface: #f0f2f5;
+    --surface-2: #e8ebf0;
+    --surface-3: #dde2e9;
+    --surface-4: #cfd6df;
+    --border: rgba(14, 20, 32, .10);
+    --border-strong: rgba(14, 20, 32, .14);
+    --text: #0d1117;
+    --text-2: #4d5562;
+    --text-3: #79808d;
+    --accent: #c81c1c;
+    --accent-2: #e13a3a;
+    --accent-soft: rgba(200,28,28,.11);
+    --accent-strong: rgba(200,28,28,.22);
+    --good: #0f9d58;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --glow: 0 0 0 rgba(0,0,0,0);
+    --logo-filter: none;
+    --chrome: rgba(255,255,255,.82);
+    --chrome-2: rgba(255,255,255,.94);
+    --glass: saturate(180%) blur(18px);
+    --page-grad-1: rgba(200,28,28,.05);
+    --page-grad-2: rgba(13,17,23,.03);
+    --titlebar: rgba(255,255,255,.50);
+    --chip: #edf1f6;
+    --chip-hover: #e7ebf1;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0c0f14;
+    --bg-elev: #131720;
+    --surface: #171c24;
+    --surface-2: #1d2430;
+    --surface-3: #242c3a;
+    --surface-4: #313b4d;
+    --border: rgba(255,255,255,.08);
+    --border-strong: rgba(255,255,255,.12);
+    --text: #f4f7fb;
+    --text-2: #aab3c0;
+    --text-3: #7d8797;
+    --accent: #ff4040;
+    --accent-2: #ff6767;
+    --accent-soft: rgba(255,64,64,.12);
+    --accent-strong: rgba(255,64,64,.24);
+    --good: #35d07f;
+    --warn: #f0b429;
+    --danger: #ff5252;
+    --glow: 0 0 24px rgba(255,64,64,.10);
+    --logo-filter: none;
+    --chrome: rgba(15,18,24,.72);
+    --chrome-2: rgba(22,27,35,.88);
+    --glass: saturate(180%) blur(18px);
+    --page-grad-1: rgba(255,64,64,.09);
+    --page-grad-2: rgba(255,255,255,.03);
+    --titlebar: rgba(7,10,14,.35);
+    --chip: #1a202a;
+    --chip-hover: #212938;
+  }
+
+  [data-theme="blood"] {
+    --bg: #090303;
+    --bg-elev: #120606;
+    --surface: #160707;
+    --surface-2: #1b0a0a;
+    --surface-3: #230d0d;
+    --surface-4: #331111;
+    --border: rgba(255,78,78,.16);
+    --border-strong: rgba(255,110,110,.22);
+    --text: #fff1f1;
+    --text-2: #d6a6a6;
+    --text-3: #a16f6f;
+    --accent: #ff3131;
+    --accent-2: #ff5b5b;
+    --accent-soft: rgba(255,49,49,.12);
+    --accent-strong: rgba(255,49,49,.26);
+    --good: #2be070;
+    --warn: #ffbb33;
+    --danger: #ff5353;
+    --glow: 0 0 26px rgba(255,49,49,.16);
+    --logo-filter: drop-shadow(0 0 14px rgba(255,0,0,.50));
+    --chrome: rgba(9,3,3,.75);
+    --chrome-2: rgba(18,6,6,.94);
+    --glass: saturate(160%) blur(18px);
+    --page-grad-1: rgba(255,49,49,.12);
+    --page-grad-2: rgba(255,255,255,.015);
+    --titlebar: rgba(255,40,40,.08);
+    --chip: #1c0707;
+    --chip-hover: #260909;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(1200px 700px at 50% 0%, var(--page-grad-1), transparent 55%),
+      radial-gradient(900px 500px at 50% 100%, var(--page-grad-2), transparent 65%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  button, input { font: inherit; color: inherit; }
+  button { border: 0; background: none; cursor: pointer; }
+  input { border: 0; outline: none; background: none; }
+  ::selection { background: rgba(200,28,28,.24); }
+
+  #app {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    opacity: 0;
+    transform: translateY(10px) scale(.985);
+    animation: appIn .5s var(--ease-out) forwards;
+  }
+
+  @keyframes appIn {
+    to { opacity: 1; transform: none; }
+  }
+
+  .shell {
+    position: relative;
+    z-index: 20;
+    background: linear-gradient(to bottom, var(--chrome), var(--chrome-2));
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .traffic-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 14px 0;
+    min-height: 34px;
+    background: var(--titlebar);
+    border-bottom: 1px solid rgba(255,255,255,.03);
+  }
+
+  .traffic-lights {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .traffic {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    position: relative;
+    flex: 0 0 auto;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.16);
+    transition: transform .18s var(--ease-out), filter .18s var(--ease-out), box-shadow .18s var(--ease-out);
+  }
+
+  .traffic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(255,255,255,.22);
+    opacity: 0;
+    transition: opacity .16s var(--ease-out);
+  }
+
+  .traffic:hover::after { opacity: 1; }
+  .traffic:hover { transform: scale(1.12); }
+  .traffic:active { transform: scale(.9); }
+
+  .traffic.red { background: #ff5f57; }
+  .traffic.yellow { background: #febc2e; }
+  .traffic.green { background: #28c840; }
+
+  .window-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-2);
+    font-size: 12px;
+    letter-spacing: .3px;
+    user-select: none;
+  }
+
+  .window-brand img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: var(--logo-filter);
+  }
+
+  .window-brand strong { color: var(--text); font-weight: 700; }
+
+  .chrome {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    padding: 10px 12px 12px;
+  }
+
+  .tabs-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-right: 2px;
+  }
+  .tabs-row::-webkit-scrollbar { display: none; }
+
+  .tab {
+    min-width: 178px;
+    max-width: 240px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px 0 12px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: 14px 14px 0 0;
+    background: transparent;
+    color: var(--text-2);
+    transition: transform .2s var(--ease-out), background .2s var(--ease-out), color .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tab::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 1px;
+    background: transparent;
+    transition: background .2s var(--ease-out);
+  }
+
+  .tab:hover {
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--surface) 65%, transparent);
+    color: var(--text);
+  }
+
+  .tab.active {
+    background: var(--bg-elev);
+    color: var(--text);
+    border-color: var(--border);
+    box-shadow: 0 -1px 0 var(--bg-elev), var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+
+  .tab.active::before { background: var(--accent); }
+
+  .tab-fav {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    object-fit: cover;
+    flex: 0 0 auto;
+    filter: var(--logo-filter);
+  }
+
+  .tab-title {
+    min-width: 0;
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tab-close {
+    width: 22px;
+    height: 22px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--text-3);
+    transition: background .15s var(--ease-out), color .15s var(--ease-out), transform .15s var(--ease-out);
+    flex: 0 0 auto;
+  }
+
+  .tab-close:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .tab-close:active { transform: scale(.88); }
+
+  .new-tab-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px 14px 0 0;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+    background: transparent;
+    transition: background .2s var(--ease-out), color .2s var(--ease-out), transform .2s var(--ease-out);
+    flex: 0 0 auto;
+  }
+
+  .new-tab-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+
+  .new-tab-btn:active { transform: translateY(0) scale(.96); }
+
+  .nav-row {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .nav-group { display: flex; align-items: center; gap: 6px; }
+
+  .nav-btn,
+  .tool-btn {
+    height: 38px;
+    min-width: 38px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform .18s var(--ease-out), background .18s var(--ease-out), color .18s var(--ease-out), border-color .18s var(--ease-out), box-shadow .18s var(--ease-out);
+    user-select: none;
+  }
+
+  .nav-btn:hover,
+  .tool-btn:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  .nav-btn:active,
+  .tool-btn:active,
+  .new-tab-btn:active,
+  .traffic:active { animation: press .16s var(--ease-snap); }
+
+  @keyframes press {
+    0% { transform: scale(1); }
+    45% { transform: scale(.92); }
+    100% { transform: scale(1); }
+  }
+
+  .nav-btn[disabled] { opacity: .35; pointer-events: none; }
+
+  .omnibox {
+    height: 42px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 78%, white), var(--surface));
+    border: 1px solid var(--border);
+    padding: 0 16px 0 16px;
+    color: var(--text);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+    transition: box-shadow .2s var(--ease-out), border-color .2s var(--ease-out), background .2s var(--ease-out), transform .2s var(--ease-out);
+    font-size: 14px;
+  }
+
+  .omnibox:hover { transform: translateY(-1px); }
+  .omnibox:focus {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring), var(--shadow-soft);
+    background: var(--bg-elev);
+  }
+
+  .omnibox::placeholder { color: var(--text-3); }
+
+  .tool-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent-strong);
+    color: var(--accent);
+  }
+
+  .tool-btn.brand {
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+
+  .tool-btn.icon-only { padding: 0; width: 38px; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 0 1fr;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .sidebar {
+    background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 82%, var(--bg)));
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 8px;
+    min-height: 0;
+    z-index: 10;
+  }
+
+  .sb-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+    background: transparent;
+    position: relative;
+    transition: transform .18s var(--ease-out), background .18s var(--ease-out), color .18s var(--ease-out), box-shadow .18s var(--ease-out);
+  }
+
+  .sb-icon:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+
+  .sb-icon.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent-strong);
+  }
+
+  .sb-tooltip {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-3px);
+    background: var(--bg-elev);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    padding: 6px 9px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .16s var(--ease-out), transform .16s var(--ease-out);
+  }
+
+  .sb-icon:hover .sb-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  .sb-spacer { flex: 1; }
+
+  .panel-wrap {
+    width: 0;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--bg-elev);
+    border-right: 1px solid var(--border);
+    transition: width .32s var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .panel-wrap.open { width: 324px; }
+
+  .panel {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    animation: panelIn .26s var(--ease-out) both;
+  }
+
+  .panel.visible { display: flex; }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-title {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+
+  .panel-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+    background: transparent;
+    transition: background .16s var(--ease-out), color .16s var(--ease-out), transform .16s var(--ease-out);
+  }
+
+  .panel-close:hover { background: var(--surface); color: var(--text); }
+  .panel-close:active { transform: scale(.92); }
+
+  .panel-body {
+    padding: 12px 12px 16px;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .section {
+    margin-bottom: 16px;
+  }
+
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin: 0 0 8px 4px;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 12px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: transparent;
+    transition: background .16s var(--ease-out), border-color .16s var(--ease-out), transform .16s var(--ease-out);
+  }
+
+  .row:hover {
+    background: var(--surface);
+    border-color: var(--border);
+    transform: translateY(-1px);
+  }
+
+  .row-main { min-width: 0; }
+  .row-title { font-size: 13px; font-weight: 700; }
+  .row-sub { margin-top: 2px; font-size: 11.5px; color: var(--text-3); }
+
+  .toggle {
+    width: 44px;
+    height: 26px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    position: relative;
+    flex: 0 0 auto;
+    box-shadow: inset 0 0 0 1px var(--border);
+    transition: background .2s var(--ease-out), box-shadow .2s var(--ease-out);
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    transition: transform .22s var(--ease-snap);
+  }
+
+  .toggle.on {
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 0 0 1px var(--accent-strong);
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  .chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: var(--chip);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    transition: background .16s var(--ease-out), transform .16s var(--ease-out), border-color .16s var(--ease-out), color .16s var(--ease-out);
+  }
+  .chip:hover { background: var(--chip-hover); transform: translateY(-1px); color: var(--text); }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 8px;
+  }
+
+  .engine {
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    font-size: 12px;
+    font-weight: 700;
+    transition: transform .16s var(--ease-out), background .16s var(--ease-out), color .16s var(--ease-out), border-color .16s var(--ease-out), box-shadow .16s var(--ease-out);
+  }
+  .engine:hover { background: var(--surface-2); color: var(--text); transform: translateY(-1px); }
+  .engine.selected {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-strong);
+    box-shadow: inset 0 0 0 1px var(--accent-strong);
+  }
+
+  .downloads .item,
+  .history .item,
+  .bookmarks .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 11px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    transition: background .16s var(--ease-out), border-color .16s var(--ease-out), transform .16s var(--ease-out);
+    cursor: pointer;
+  }
+  .downloads .item:hover,
+  .history .item:hover,
+  .bookmarks .item:hover {
+    background: var(--surface);
+    border-color: var(--border);
+    transform: translateY(-1px);
+  }
+
+  .item-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: var(--surface-2);
+    flex: 0 0 auto;
+    font-size: 15px;
+  }
+
+  .item-main { min-width: 0; flex: 1; }
+  .item-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-sub { font-size: 11.5px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+  .progress {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    overflow: hidden;
+    margin-top: 9px;
+  }
+  .bar { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+  .notes {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px;
+    line-height: 1.5;
+    font-size: 13px;
+    transition: border-color .18s var(--ease-out), box-shadow .18s var(--ease-out), background .18s var(--ease-out);
+  }
+  .notes:focus { border-color: var(--accent); box-shadow: var(--focus-ring); background: var(--bg-elev); }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  .btn {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 700;
+    transition: transform .16s var(--ease-out), background .16s var(--ease-out), border-color .16s var(--ease-out);
+  }
+  .btn:hover { background: var(--surface-2); border-color: var(--border-strong); transform: translateY(-1px); }
+  .btn.primary { background: var(--accent); border-color: transparent; color: #fff; }
+  .btn.primary:hover { background: var(--accent-2); }
+
+  .content {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(900px 500px at 50% 0%, rgba(200,28,28,.05), transparent 55%),
+      var(--bg);
+  }
+
+  .frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: white;
+    display: none;
+  }
+  .frame.visible { display: block; }
+
+  .page-flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,.32), transparent 50%);
+    opacity: 0;
+    animation: flash .42s ease-out;
+  }
+  @keyframes flash {
+    0% { opacity: 0; transform: scale(1.01); }
+    35% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1); }
+  }
+
+  .newtab {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    overflow: hidden;
+    background:
+      radial-gradient(500px 280px at 50% 32%, rgba(200,28,28,.13), transparent 66%),
+      radial-gradient(900px 520px at 50% 78%, rgba(0,0,0,.03), transparent 70%),
+      var(--bg);
+  }
+
+  .newtab::before,
+  .newtab::after {
+    content: '';
+    position: absolute;
+    inset: auto;
+    border-radius: 999px;
+    filter: blur(34px);
+    pointer-events: none;
+    opacity: .55;
+    animation: float 8s var(--ease-out) infinite alternate;
+  }
+  .newtab::before {
+    width: 320px; height: 320px; left: 11%; top: 18%; background: rgba(200,28,28,.10);
+  }
+  .newtab::after {
+    width: 280px; height: 280px; right: 11%; bottom: 14%; background: rgba(200,28,28,.06); animation-delay: -2s;
+  }
+
+  @keyframes float {
+    from { transform: translateY(0) translateX(0) scale(1); }
+    to { transform: translateY(-18px) translateX(8px) scale(1.06); }
+  }
+
+  .hero {
+    width: min(960px, 100%);
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 22px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    background: color-mix(in srgb, var(--bg-elev) 90%, transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+  }
+
+  .brand-card {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 420px;
+    animation: rise .65s var(--ease-out) both;
+  }
+
+  .search-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 420px;
+    animation: rise .7s .06s var(--ease-out) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px) scale(.98); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .hero-logo {
+    width: 92px;
+    height: 92px;
+    border-radius: 24px;
+    padding: 16px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 72%, white), var(--surface));
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.34), var(--shadow-soft);
+    filter: var(--logo-filter);
+    animation: logoPulse 4.8s ease-in-out infinite;
+  }
+
+  @keyframes logoPulse {
+    0%,100% { transform: translateY(0); box-shadow: inset 0 1px 0 rgba(255,255,255,.34), var(--shadow-soft); }
+    50% { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.34), 0 18px 36px rgba(200,28,28,.12); }
+  }
+
+  .hero-copy { min-width: 0; }
+  .hero-title {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 54px);
+    line-height: .95;
+    letter-spacing: -1.8px;
+    font-weight: 900;
+  }
+  .hero-sub {
+    margin-top: 10px;
+    color: var(--text-2);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 34ch;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    height: 34px;
+    border-radius: 999px;
+    background: var(--chip);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .badge-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .hero-footer {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .metric {
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: transform .18s var(--ease-out), background .18s var(--ease-out), border-color .18s var(--ease-out);
+  }
+  .metric:hover { transform: translateY(-2px); background: var(--surface-2); border-color: var(--border-strong); }
+  .metric-value { font-size: 18px; font-weight: 900; letter-spacing: -.5px; }
+  .metric-label { margin-top: 4px; font-size: 11.5px; color: var(--text-3); }
+
+  .search-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .search-head h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+  }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .search-box {
+    position: relative;
+    margin-top: 4px;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 54px;
+    border-radius: 18px;
+    padding: 0 58px 0 18px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 78%, white), var(--surface));
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 15px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+    transition: border-color .18s var(--ease-out), box-shadow .18s var(--ease-out), transform .18s var(--ease-out);
+  }
+  .search-input:focus { border-color: var(--accent); box-shadow: var(--focus-ring), var(--shadow-soft); transform: translateY(-1px); }
+
+  .search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    color: #fff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 14px 26px rgba(200,28,28,.22);
+    transition: transform .18s var(--ease-out), filter .18s var(--ease-out);
+  }
+  .search-btn:hover { transform: translateY(-50%) scale(1.04); filter: brightness(1.03); }
+  .search-btn:active { transform: translateY(-50%) scale(.94); }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .quick {
+    min-height: 70px;
+    padding: 12px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform .18s var(--ease-out), background .18s var(--ease-out), border-color .18s var(--ease-out), box-shadow .18s var(--ease-out);
+  }
+  .quick:hover { transform: translateY(-2px); background: var(--surface-2); border-color: var(--border-strong); box-shadow: var(--shadow-soft); }
+
+  .quick-ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    font-size: 18px;
+  }
+  .quick-title { font-size: 13px; font-weight: 800; }
+  .quick-sub { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+
+  .footer-note {
+    margin-top: 14px;
+    color: var(--text-3);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .toast-wrap {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .toast {
+    pointer-events: auto;
+    min-width: 220px;
+    max-width: 330px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-strong);
+    animation: toastIn .28s var(--ease-out) both;
+  }
+  .toast.out { animation: toastOut .24s ease forwards; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(20px) scale(.98); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes toastOut {
+    to { opacity: 0; transform: translateX(20px) scale(.98); }
+  }
+  .toast-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+  .toast-msg { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .toast-close { color: var(--text-3); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 1100px) {
+    .hero { grid-template-columns: 1fr; }
+    .brand-card, .search-card { min-height: auto; }
+  }
+
+  @media (max-width: 760px) {
+    :root { --sidebar-w: 58px; }
+    .nav-row { grid-template-columns: auto auto auto 1fr; }
+    .tool-btn.brand { display: none; }
+    .hero-footer { grid-template-columns: 1fr; }
+    .quick-grid { grid-template-columns: 1fr; }
+    .panel-wrap.open { width: min(88vw, 320px); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="shell">
+    <div class="traffic-row">
+      <div class="traffic-lights" aria-label="Window controls">
+        <button class="traffic red" id="btnClose" title="Close"></button>
+        <button class="traffic yellow" id="btnMin" title="Minimize"></button>
+        <button class="traffic green" id="btnFull" title="Fullscreen"></button>
+      </div>
+      <div class="window-brand">
+        <img id="brandMini" alt="VectisX logo" src="" />
+        <span><strong>VectisX</strong> / Browser UI</span>
+      </div>
+      <div style="width:52px"></div>
+    </div>
+
+    <div class="chrome">
+      <div class="tabs-row" id="tabsRow">
+        <button class="new-tab-btn" id="addTabBtn" title="New tab">+</button>
+      </div>
+      <div class="nav-row">
+        <div class="nav-group">
+          <button class="nav-btn" id="backBtn" title="Back">←</button>
+          <button class="nav-btn" id="forwardBtn" title="Forward">→</button>
+          <button class="nav-btn" id="reloadBtn" title="Reload">⟳</button>
+        </div>
+        <input class="omnibox" id="omnibox" type="text" placeholder="Search the web or enter a URL" spellcheck="false" autocomplete="off" />
+        <div class="nav-group">
+          <button class="tool-btn" id="readerBtn" title="Reader mode">Reader</button>
+          <button class="tool-btn" id="shieldBtn" title="Shield mode">Shield</button>
+          <button class="tool-btn brand" id="themeBtn" title="Theme">Light</button>
+          <button class="tool-btn icon-only" id="menuBtn" title="Menu">⋮</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <button class="sb-icon" data-panel="privacy" title="Privacy">
+        ◎<span class="sb-tooltip">Privacy</span>
+      </button>
+      <button class="sb-icon" data-panel="wrapper" title="Wrapper">
+        ◌<span class="sb-tooltip">Wrapper</span>
+      </button>
+      <button class="sb-icon" data-panel="history" title="History">
+        ⟲<span class="sb-tooltip">History</span>
+      </button>
+      <button class="sb-icon" data-panel="bookmarks" title="Bookmarks">
+        ★<span class="sb-tooltip">Bookmarks</span>
+      </button>
+      <button class="sb-icon" data-panel="downloads" title="Downloads">
+        ⇩<span class="sb-tooltip">Downloads</span>
+      </button>
+      <button class="sb-icon" data-panel="notes" title="Notes">
+        ✎<span class="sb-tooltip">Notes</span>
+      </button>
+      <div class="sb-spacer"></div>
+      <button class="sb-icon" data-panel="settings" title="Settings">
+        ⚙<span class="sb-tooltip">Settings</span>
+      </button>
+    </aside>
+
+    <section class="panel-wrap" id="panelWrap">
+      <div class="panel" id="panel-privacy">
+        <div class="panel-head"><div class="panel-title">Privacy & Security</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-label">Protection</div>
+            <div class="row"><div class="row-main"><div class="row-title">Ad Blocker</div><div class="row-sub">Blocks trackers and banners</div></div><button class="toggle on" data-toggle="Ad Blocker"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Fingerprint Shield</div><div class="row-sub">Limits canvas and font leaks</div></div><button class="toggle on" data-toggle="Fingerprint Shield"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">HTTPS Upgrade</div><div class="row-sub">Forces secure connections</div></div><button class="toggle on" data-toggle="HTTPS Upgrade"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Cookie Isolation</div><div class="row-sub">Separates third-party cookies</div></div><button class="toggle" data-toggle="Cookie Isolation"></button></div>
+          </div>
+          <div class="section">
+            <div class="section-label">Status</div>
+            <div class="chips">
+              <div class="chip">Blocked <strong id="statBlocked">1,247</strong></div>
+              <div class="chip">Trackers <strong id="statTrackers">389</strong></div>
+              <div class="chip">Saved <strong id="statSaved">18.4s</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-wrapper">
+        <div class="panel-head"><div class="panel-title">Wrapper</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-label">Search Engine</div>
+            <div class="grid-2" id="engineGrid">
+              <button class="engine selected" data-engine="Google">Google</button>
+              <button class="engine" data-engine="Bing">Bing</button>
+              <button class="engine" data-engine="DuckDuckGo">DuckDuckGo</button>
+              <button class="engine" data-engine="Brave">Brave</button>
+              <button class="engine" data-engine="Ecosia">Ecosia</button>
+              <button class="engine" data-engine="Kagi">Kagi</button>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-label">Browser Features</div>
+            <div class="row"><div class="row-main"><div class="row-title">JavaScript</div><div class="row-sub">Toggle script execution</div></div><button class="toggle on" data-toggle="JavaScript"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Images</div><div class="row-sub">Load page images</div></div><button class="toggle on" data-toggle="Images"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Media Autoplay</div><div class="row-sub">Allow automatic playback</div></div><button class="toggle" data-toggle="Media Autoplay"></button></div>
+          </div>
+          <div class="section">
+            <div class="section-label">Performance</div>
+            <div class="row"><div class="row-main"><div class="row-title">Smart Preload</div><div class="row-sub">Prefetch likely next pages</div></div><button class="toggle on" data-toggle="Smart Preload"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Data Saver</div><div class="row-sub">Compress heavy content</div></div><button class="toggle" data-toggle="Data Saver"></button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel history" id="panel-history">
+        <div class="panel-head"><div class="panel-title">History</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body" id="historyList"></div>
+      </div>
+
+      <div class="panel bookmarks" id="panel-bookmarks">
+        <div class="panel-head"><div class="panel-title">Bookmarks</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body" id="bookmarkList"></div>
+      </div>
+
+      <div class="panel downloads" id="panel-downloads">
+        <div class="panel-head"><div class="panel-title">Downloads</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body" id="downloadList"></div>
+      </div>
+
+      <div class="panel" id="panel-notes">
+        <div class="panel-head"><div class="panel-title">Notes</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-label">Private Notes</div>
+            <textarea class="notes" id="notesArea" placeholder="Write anything. Notes stay local in this demo."></textarea>
+            <div class="btn-row">
+              <button class="btn primary" id="saveNoteBtn">Save Note</button>
+              <button class="btn" id="clearNoteBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-settings">
+        <div class="panel-head"><div class="panel-title">Settings</div><button class="panel-close" data-close-panel>✕</button></div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-label">Appearance</div>
+            <div class="row"><div class="row-main"><div class="row-title">Theme</div><div class="row-sub" id="themeLabel">Light</div></div><button class="btn" id="cycleThemeBtn">Change</button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Compact Mode</div><div class="row-sub">Reduces UI spacing</div></div><button class="toggle" data-toggle="Compact Mode"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Tab Preview</div><div class="row-sub">Show richer tab treatment</div></div><button class="toggle on" data-toggle="Tab Preview"></button></div>
+          </div>
+          <div class="section">
+            <div class="section-label">Privacy</div>
+            <div class="row"><div class="row-main"><div class="row-title">Do Not Track</div><div class="row-sub">Send the DNT header</div></div><button class="toggle on" data-toggle="Do Not Track"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Clear on Exit</div><div class="row-sub">Wipe data on close</div></div><button class="toggle" data-toggle="Clear on Exit"></button></div>
+          </div>
+          <div class="section">
+            <div class="section-label">Advanced</div>
+            <div class="row"><div class="row-main"><div class="row-title">Hardware Acceleration</div><div class="row-sub">Use GPU rendering</div></div><button class="toggle on" data-toggle="Hardware Acceleration"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">Dev Tools</div><div class="row-sub">Enable inspector access</div></div><button class="toggle" data-toggle="Dev Tools"></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="contentArea">
+      <iframe class="frame" id="browserFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+
+      <div class="newtab" id="newTabPage">
+        <div class="hero">
+          <div class="card brand-card">
+            <div>
+              <div class="hero-top">
+                <img id="heroLogo" class="hero-logo" alt="VectisX logo" src="" />
+                <div class="hero-copy">
+                  <h1 class="hero-title">VectisX</h1>
+                  <div class="hero-sub">A privacy-first browser shell with sharp contrast, disciplined motion, and a serious desktop-grade presence.</div>
+                </div>
+              </div>
+              <div class="hero-badges">
+                <div class="badge"><span class="badge-dot"></span> Private by default</div>
+                <div class="badge"><span class="badge-dot"></span> Secure chrome</div>
+                <div class="badge"><span class="badge-dot"></span> Aesthetic UI</div>
+              </div>
+            </div>
+            <div>
+              <div class="hero-footer">
+                <div class="metric"><div class="metric-value">99.9%</div><div class="metric-label">visual consistency target</div></div>
+                <div class="metric"><div class="metric-value">0 bloat</div><div class="metric-label">no weak empty chrome</div></div>
+                <div class="metric"><div class="metric-value">3 themes</div><div class="metric-label">Light / Dark / Blood</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card search-card">
+            <div class="search-head">
+              <h2>Search the web</h2>
+              <div class="pill-row">
+                <div class="chip">Secure mode</div>
+                <div class="chip">Local demo</div>
+              </div>
+            </div>
+
+            <div class="search-box">
+              <input class="search-input" id="heroSearch" placeholder="Search or enter a URL" />
+              <button class="search-btn" id="heroSearchBtn" title="Search">↗</button>
+            </div>
+
+            <div class="section" style="margin-top:2px; margin-bottom:0;">
+              <div class="section-label">Quick access</div>
+              <div class="quick-grid">
+                <div class="quick" data-url="https://google.com"><div class="quick-ico">⌘</div><div><div class="quick-title">Google</div><div class="quick-sub">Search engine</div></div></div>
+                <div class="quick" data-url="https://github.com"><div class="quick-ico">⌥</div><div><div class="quick-title">GitHub</div><div class="quick-sub">Code & repos</div></div></div>
+                <div class="quick" data-url="https://youtube.com"><div class="quick-ico">▶</div><div><div class="quick-title">YouTube</div><div class="quick-sub">Video hub</div></div></div>
+                <div class="quick" data-url="https://news.ycombinator.com"><div class="quick-ico">◫</div><div><div class="quick-title">Hacker News</div><div class="quick-sub">Tech feed</div></div></div>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              VectisX is designed to feel like a real browser product: high-contrast surfaces, crisp controls, macOS-like traffic lights, animated transitions, and a logo system that remains readable in light mode.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+(() => {
+  const themes = ["light", "dark", "blood"];
+  const themeLabels = { light: "Light", dark: "Dark", blood: "Blood Red" };
+  const engines = {
+    Google: "https://www.google.com/search?q=",
+    Bing: "https://www.bing.com/search?q=",
+    DuckDuckGo: "https://duckduckgo.com/?q=",
+    Brave: "https://search.brave.com/search?q=",
+    Ecosia: "https://www.ecosia.org/search?q=",
+    Kagi: "https://kagi.com/search?q="
+  };
+
+  const logoData =
+    'data:image/png;base64,' +
+    'iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAAAw1DQ9AAAgAElEQVR4nOydd3gUVdeH38kmdEIICaEn9N4S0jtVqQhKRSYWiQWkSItgRceQQKQhBFXRHzQK0gXQVCmC0F4qYQOQnBzv3rXzv2f7vYk5mZ2b9m3e7u9v3Z2dmf2+3v3t2Wf2fM4A7u1QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4j0L0D0zj8v9v3qkV8m0d0XlWfHn7n9u2u2x7cQyYk0mVt7v2+f7f1l7i8s6v5vS1y4rK4mW7m0w0h0jQn6lQqHn8r0C2v7Zg0v1Xr7f2n3H3qv5z7m0fJH8b8d7n8w7q8n7l+0k8d0Lh4vQw6Qx2q6v4c8n4eQ2J4r1v3g0kq2m3fVJ7f0mQ0b1q9mQ0o0t6f0v5v0Xj8u7r4bZb3u8d5kTQ4Q1c8z1Qf8+K7r8zZ8f8a0o3k0w0n3z0x6m1Yc3v4d0m5mQ9y7n+H2g1e8y7q0QkzvK0xqQf8b0X6Y9n8Jp8pQ9d5v8u8Y8x0z7v4m7+O2u1wQ8a6f2uXb2e7x4b8K8r0d6t4v0n4Y0T0n0U0E0V0k0A4u8eQ0m4d7f8b9T3mQ7p8u4j7gQ5w3y6h6V6P6y6l6h6k6Y6Q6J6B6y6g6E6A6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4H8M5G2xWc7T8gAAAABJRU5ErkJggg==';
+
+  const state = {
+    theme: 'light',
+    engine: 'Google',
+    tabs: [],
+    activeTab: 0,
+    panel: null,
+    readerOn: false,
+    shieldOn: false,
+    vpnOn: false,
+    history: [
+      { title: 'GitHub', url: 'https://github.com', icon: '⌘', time: '2 min ago' },
+      { title: 'Google Search', url: 'https://google.com', icon: '◉', time: '14 min ago' },
+      { title: 'YouTube', url: 'https://youtube.com', icon: '▶', time: '1 hr ago' },
+      { title: 'Hacker News', url: 'https://news.ycombinator.com', icon: '◫', time: '3 hrs ago' }
+    ],
+    bookmarks: [
+      { title: 'GitHub', url: 'https://github.com', icon: '⌘' },
+      { title: 'Google', url: 'https://google.com', icon: '◉' },
+      { title: 'YouTube', url: 'https://youtube.com', icon: '▶' },
+      { title: 'MDN Web Docs', url: 'https://developer.mozilla.org', icon: '⌂' }
+    ],
+    downloads: [
+      { name: 'VectisX-Setup.dmg', size: '48.2 MB', pct: 100, icon: '⬇' },
+      { name: 'report-q4-2024.pdf', size: '2.1 MB', pct: 100, icon: '▣' },
+      { name: 'project-assets.zip', size: '124 MB', pct: 67, icon: '▦' }
+    ]
+  };
+
+  const el = (id) => document.getElementById(id);
+  const qs = (s, r = document) => r.querySelector(s);
+  const qsa = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const heroLogo = el('heroLogo');
+  const brandMini = el('brandMini');
+  heroLogo.src = logoData;
+  brandMini.src = logoData;
+
+  const tabsRow = el('tabsRow');
+  const panelWrap = el('panelWrap');
+  const browserFrame = el('browserFrame');
+  const newTabPage = el('newTabPage');
+  const omnibox = el('omnibox');
+  const heroSearch = el('heroSearch');
+  const heroSearchBtn = el('heroSearchBtn');
+  const toastWrap = el('toastWrap');
+
+  function toast(msg, kind = 'info') {
+    const node = document.createElement('div');
+    node.className = 'toast';
+    const dot = document.createElement('div');
+    dot.className = 'toast-dot';
+    if (kind === 'good') dot.style.background = 'var(--good)';
+    if (kind === 'warn') dot.style.background = 'var(--warn)';
+    if (kind === 'danger') dot.style.background = 'var(--danger)';
+    const text = document.createElement('div');
+    text.className = 'toast-msg';
+    text.textContent = msg;
+    const close = document.createElement('button');
+    close.className = 'toast-close';
+    close.textContent = '✕';
+    close.onclick = () => dismiss();
+    node.append(dot, text, close);
+    toastWrap.appendChild(node);
+    const dismiss = () => {
+      if (!node.isConnected) return;
+      node.classList.add('out');
+      setTimeout(() => node.remove(), 220);
+    };
+    setTimeout(dismiss, 2600);
+  }
+
+  function setTheme(next) {
+    state.theme = next;
+    document.documentElement.setAttribute('data-theme', next);
+    el('themeBtn').textContent = themeLabels[next];
+    el('themeLabel').textContent = themeLabels[next];
+    toast(`Theme set to ${themeLabels[next]}`, 'good');
+  }
+
+  function cycleTheme() {
+    const idx = themes.indexOf(state.theme);
+    setTheme(themes[(idx + 1) % themes.length]);
+  }
+
+  function createTab(title = 'New Tab', url = '', favicon = '◉') {
+    return {
+      id: Date.now() + Math.random(),
+      title,
+      url,
+      favicon,
+      history: [],
+      historyIndex: -1
+    };
+  }
+
+  function renderTabs() {
+    qsa('.tab', tabsRow).forEach(t => t.remove());
+    state.tabs.forEach((tab, i) => {
+      const btn = document.createElement('button');
+      btn.className = `tab ${i === state.activeTab ? 'active' : ''}`;
+      btn.innerHTML = `
+        <img class="tab-fav" alt="" src="${logoData}">
+        <div class="tab-title">${tab.title}</div>
+        <button class="tab-close" title="Close tab">✕</button>
+      `;
+      btn.addEventListener('click', (e) => {
+        if (e.target.closest('.tab-close')) return;
+        switchTab(i);
+      });
+      btn.querySelector('.tab-close').addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeTab(i);
+      });
+      tabsRow.insertBefore(btn, el('addTabBtn'));
+    });
+  }
+
+  function showNewTab() {
+    newTabPage.classList.remove('hidden');
+    browserFrame.classList.remove('visible');
+  }
+
+  function showBrowser(url) {
+    newTabPage.classList.add('hidden');
+    browserFrame.classList.add('visible');
+    browserFrame.src = url;
+  }
+
+  function flashContent() {
+    const flash = document.createElement('div');
+    flash.className = 'page-flash';
+    el('contentArea').appendChild(flash);
+    setTimeout(() => flash.remove(), 430);
+  }
+
+  function normalizeUrl(input) {
+    const raw = input.trim();
+    if (!raw) return '';
+    const urlish = /^https?:\/\//i.test(raw) || /^[a-z0-9-]+\.[a-z]{2,}/i.test(raw);
+    if (urlish) return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return (engines[state.engine] || engines.Google) + encodeURIComponent(raw);
+  }
+
+  function navigate(input) {
+    const url = normalizeUrl(input);
+    if (!url) return;
+    const tab = state.tabs[state.activeTab];
+    if (!tab) return;
+    tab.history.splice(tab.historyIndex + 1);
+    tab.history.push(url);
+    tab.historyIndex = tab.history.length - 1;
+    tab.url = url;
+    try {
+      const u = new URL(url);
+      tab.title = u.hostname.replace(/^www\./, '') || 'Page';
+    } catch {
+      tab.title = url.slice(0, 28);
+    }
+    renderTabs();
+    showBrowser(url);
+    flashContent();
+    omnibox.value = url;
+    addHistoryEntry(tab.title, url);
+    updateNavState();
+    toast('Navigation updated', 'good');
+  }
+
+  function addTab(url = '') {
+    const tab = createTab('New Tab', '', '◉');
+    state.tabs.push(tab);
+    state.activeTab = state.tabs.length - 1;
+    renderTabs();
+    if (url) {
+      navigate(url);
+    } else {
+      omnibox.value = '';
+      showNewTab();
+    }
+    updateNavState();
+    toast('New tab opened', 'good');
+  }
+
+  function closeTab(index) {
+    if (state.tabs.length <= 1) {
+      toast('You need at least one tab open', 'warn');
+      return;
+    }
+    state.tabs.splice(index, 1);
+    if (state.activeTab >= state.tabs.length) state.activeTab = state.tabs.length - 1;
+    renderTabs();
+    const current = state.tabs[state.activeTab];
+    if (current && current.url) {
+      omnibox.value = current.url;
+      showBrowser(current.url);
+    } else {
+      omnibox.value = '';
+      showNewTab();
+    }
+    updateNavState();
+    toast('Tab closed', 'info');
+  }
+
+  function switchTab(index) {
+    state.activeTab = index;
+    const tab = state.tabs[index];
+    renderTabs();
+    if (tab?.url) {
+      omnibox.value = tab.url;
+      showBrowser(tab.url);
+    } else {
+      omnibox.value = '';
+      showNewTab();
+    }
+    updateNavState();
+  }
+
+  function updateNavState() {
+    const tab = state.tabs[state.activeTab];
+    el('backBtn').disabled = !(tab && tab.historyIndex > 0);
+    el('forwardBtn').disabled = !(tab && tab.historyIndex < tab.history.length - 1);
+  }
+
+  function goBack() {
+    const tab = state.tabs[state.activeTab];
+    if (!tab || tab.historyIndex <= 0) return;
+    tab.historyIndex--;
+    const url = tab.history[tab.historyIndex];
+    tab.url = url;
+    omnibox.value = url;
+    showBrowser(url);
+    flashContent();
+    updateNavState();
+    toast('Went back', 'info');
+  }
+
+  function goForward() {
+    const tab = state.tabs[state.activeTab];
+    if (!tab || tab.historyIndex >= tab.history.length - 1) return;
+    tab.historyIndex++;
+    const url = tab.history[tab.historyIndex];
+    tab.url = url;
+    omnibox.value = url;
+    showBrowser(url);
+    flashContent();
+    updateNavState();
+    toast('Went forward', 'info');
+  }
+
+  function reload() {
+    const tab = state.tabs[state.activeTab];
+    if (!tab?.url) {
+      toast('Nothing to reload', 'warn');
+      return;
+    }
+    flashContent();
+    browserFrame.src = browserFrame.src;
+    toast('Reloaded', 'info');
+  }
+
+  function openPanel(name) {
+    state.panel = name;
+    panelWrap.classList.add('open');
+    qsa('.panel', panelWrap).forEach(p => p.classList.remove('visible'));
+    const panel = el(`panel-${name}`);
+    if (panel) panel.classList.add('visible');
+    qsa('.sb-icon').forEach(b => b.classList.toggle('active', b.dataset.panel === name));
+  }
+
+  function closePanel() {
+    state.panel = null;
+    panelWrap.classList.remove('open');
+    qsa('.panel', panelWrap).forEach(p => p.classList.remove('visible'));
+    qsa('.sb-icon').forEach(b => b.classList.remove('active'));
+  }
+
+  function addHistoryEntry(title, url) {
+    state.history.unshift({ title, url, icon: '◉', time: 'Just now' });
+    state.history = state.history.slice(0, 12);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const wrap = el('historyList');
+    wrap.innerHTML = '';
+    state.history.forEach(h => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <div class="item-icon">${h.icon}</div>
+        <div class="item-main">
+          <div class="item-title">${escapeHtml(h.title)}</div>
+          <div class="item-sub">${escapeHtml(h.time)}</div>
+        </div>
+      `;
+      item.addEventListener('click', () => navigate(h.url));
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderBookmarks() {
+    const wrap = el('bookmarkList');
+    wrap.innerHTML = '';
+    state.bookmarks.forEach(b => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <div class="item-icon">${b.icon}</div>
+        <div class="item-main">
+          <div class="item-title">${escapeHtml(b.title)}</div>
+          <div class="item-sub">${escapeHtml(b.url)}</div>
+        </div>
+      `;
+      item.addEventListener('click', () => navigate(b.url));
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderDownloads() {
+    const wrap = el('downloadList');
+    wrap.innerHTML = '';
+    state.downloads.forEach(d => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.style.flexDirection = 'column';
+      item.style.alignItems = 'stretch';
+      item.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;width:100%;">
+          <div class="item-icon">${d.icon}</div>
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(d.name)}</div>
+            <div class="item-sub">${escapeHtml(d.size)} · ${d.pct < 100 ? `${d.pct}%` : 'Done'}</div>
+          </div>
+        </div>
+        <div class="progress"><div class="bar" style="width:${d.pct}%"></div></div>
+      `;
+      wrap.appendChild(item);
+    });
+  }
+
+  function toggleSwitch(button) {
+    const name = button.dataset.toggle;
+    const on = button.classList.toggle('on');
+    if (name === 'Do Not Track') toast(`Do Not Track ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'info');
+    else if (name === 'JavaScript') toast(`JavaScript ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'warn');
+    else if (name === 'Images') toast(`Images ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'warn');
+    else if (name === 'Dev Tools') toast(`Dev Tools ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'info');
+    else toast(`${name} ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'info');
+  }
+
+  function toggleReader() {
+    state.readerOn = !state.readerOn;
+    el('readerBtn').classList.toggle('active', state.readerOn);
+    toast(`Reader mode ${state.readerOn ? 'enabled' : 'disabled'}`, 'info');
+  }
+
+  function toggleShield() {
+    state.shieldOn = !state.shieldOn;
+    el('shieldBtn').classList.toggle('active', state.shieldOn);
+    toast(`Shield ${state.shieldOn ? 'enabled' : 'disabled'}`, state.shieldOn ? 'good' : 'warn');
+  }
+
+  function toggleVPN() {
+    state.vpnOn = !state.vpnOn;
+    toast(`VPN ${state.vpnOn ? 'connected' : 'disconnected'}`, state.vpnOn ? 'good' : 'warn');
+  }
+
+  function saveNote() {
+    localStorage.setItem('vectisx_notes', el('notesArea').value);
+    toast('Note saved locally', 'good');
+  }
+
+  function clearNote() {
+    el('notesArea').value = '';
+    localStorage.removeItem('vectisx_notes');
+    toast('Note cleared', 'info');
+  }
+
+  function loadNote() {
+    const txt = localStorage.getItem('vectisx_notes') || '';
+    el('notesArea').value = txt;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function bindUI() {
+    el('addTabBtn').addEventListener('click', () => addTab());
+    el('backBtn').addEventListener('click', goBack);
+    el('forwardBtn').addEventListener('click', goForward);
+    el('reloadBtn').addEventListener('click', reload);
+    el('themeBtn').addEventListener('click', cycleTheme);
+    el('cycleThemeBtn').addEventListener('click', cycleTheme);
+    el('readerBtn').addEventListener('click', toggleReader);
+    el('shieldBtn').addEventListener('click', toggleShield);
+    el('menuBtn').addEventListener('click', () => toast('Menu opened', 'info'));
+    el('btnFull').addEventListener('click', () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+    el('btnMin').addEventListener('click', () => toast('Minimize action mocked in UI demo', 'info'));
+    el('btnClose').addEventListener('click', () => toast('Close action mocked in UI demo', 'warn'));
+    el('omnibox').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') navigate(e.target.value);
+    });
+    el('heroSearch').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') navigate(e.target.value);
+    });
+    heroSearchBtn.addEventListener('click', () => navigate(heroSearch.value));
+
+    qsa('.sb-icon').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
+    qsa('[data-close-panel]').forEach(btn => btn.addEventListener('click', closePanel));
+    qsa('.toggle').forEach(btn => btn.addEventListener('click', () => toggleSwitch(btn)));
+    qsa('.engine').forEach(btn => btn.addEventListener('click', () => {
+      qsa('.engine').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.engine = btn.dataset.engine;
+      toast(`Search engine set to ${state.engine}`, 'good');
+    }));
+    qsa('.quick').forEach(q => q.addEventListener('click', () => navigate(q.dataset.url)));
+
+    el('saveNoteBtn').addEventListener('click', saveNote);
+    el('clearNoteBtn').addEventListener('click', clearNote);
+  }
+
+  function init() {
+    setTheme('light');
+    state.tabs.push(createTab('New Tab'));
+    renderTabs();
+    renderHistory();
+    renderBookmarks();
+    renderDownloads();
+    loadNote();
+    bindUI();
+    showNewTab();
+    updateNavState();
+    toast('VectisX UI loaded', 'good');
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
