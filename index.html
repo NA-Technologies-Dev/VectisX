@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VectisX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="dock" aria-label="Primary navigation">
+      <div class="dock-indicator" id="dockIndicator"></div>
+      <div class="dock-group">
+        <p class="dock-label">Core</p>
+        <button class="dock-item active" data-panel="home" data-label="Home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.6 12 5l8 6.6V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="dock-item" data-action="new-tab" data-label="New Tab">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg>
+          <span>New Tab</span>
+        </button>
+      </div>
+      <div class="dock-group">
+        <p class="dock-label">Library</p>
+        <button class="dock-item" data-panel="history" data-label="History"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 1 0 8.93 10h-2.02A7 7 0 1 1 13 5v3l4-4-4-4zM12 8h2v5.2l3.2 1.9-1 1.7L12 14z"/></svg><span>History</span></button>
+        <button class="dock-item" data-panel="downloads" data-label="Downloads"><svg viewBox="0 0 24 24"><path d="M11 4h2v9l3.5-3.5 1.4 1.4-6 6-6-6 1.4-1.4L11 13zM5 19h14v2H5z"/></svg><span>Downloads</span></button>
+        <button class="dock-item" data-panel="bookmarks" data-label="Bookmarks"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span>Bookmarks</span></button>
+      </div>
+      <div class="dock-group dock-system">
+        <p class="dock-label">System</p>
+        <button class="dock-item" data-panel="settings" data-label="Settings"><svg viewBox="0 0 24 24"><path d="m19.14 12.94.04-.94-.04-.94 2.03-1.58a.5.5 0 0 0 .12-.63l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.34 7.34 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.8a.5.5 0 0 0-.5.43l-.36 2.54c-.58.23-1.13.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.7 8.49a.5.5 0 0 0 .12.63l2.03 1.58-.04.94.04.94-2.03 1.58a.5.5 0 0 0-.12.63l1.92 3.32c.13.23.4.32.6.22l2.39-.96c.5.4 1.05.71 1.63.94l.36 2.54c.04.24.25.43.5.43h3.8c.25 0 .46-.19.5-.43l.36-2.54c.58-.23 1.13-.54 1.63-.94l2.39.96c.2.1.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.63zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5"/></svg><span>Settings</span></button>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="traffic" role="group" aria-label="Window controls">
+          <button id="closeBtn" class="light red" aria-label="Close"></button>
+          <button id="minBtn" class="light yellow" aria-label="Minimize"></button>
+          <button id="fullBtn" class="light green" aria-label="Fullscreen"></button>
+        </div>
+        <div class="tabs" id="tabs"></div>
+        <button id="addTab" class="tab-add" aria-label="Add new tab">+</button>
+      </header>
+
+      <section class="content" id="content">
+        <div class="newtab" id="newTab">
+          <img src="VectisX.png" alt="VectisX logo" class="hero-logo" />
+          <h1>VectisX</h1>
+          <form id="searchForm" class="search-wrap">
+            <input id="searchInput" type="text" placeholder="Search or enter URL" />
+            <button type="submit">Go</button>
+          </form>
+          <div class="shortcut-grid">
+            <button class="shortcut" data-url="https://github.com">GitHub</button>
+            <button class="shortcut" data-url="https://developer.mozilla.org">MDN</button>
+            <button class="shortcut" data-url="https://news.ycombinator.com">HN</button>
+            <button class="shortcut" data-url="https://youtube.com">YouTube</button>
+          </div>
+        </div>
+        <iframe id="browserFrame" class="browser-frame" title="Browser content"></iframe>
+      </section>
+    </main>
+
+    <aside class="panel" id="panel">
+      <header><h2 id="panelTitle">Panel</h2><button id="closePanel">✕</button></header>
+      <div id="panelBody"></div>
+    </aside>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
