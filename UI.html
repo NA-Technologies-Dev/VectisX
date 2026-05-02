@@ -741,7 +741,7 @@
     position: relative;
     min-width: 0;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     background:
       radial-gradient(900px 500px at 50% 0%, rgba(200,28,28,.05), transparent 55%),
       var(--bg);
@@ -1089,7 +1089,7 @@
         <button class="traffic green" id="btnFull" title="Fullscreen"></button>
       </div>
       <div class="window-brand">
-        <img id="brandMini" alt="VectisX logo" src="" />
+        <img id="brandMini" alt="VectisX logo" src="./VectisX.png" onerror="this.outerHTML='<span style=\'font-weight:bold; margin-right:8px\'>VectisX</span>'" />
         <span><strong>VectisX</strong> / Browser UI</span>
       </div>
       <div style="width:52px"></div>
@@ -1118,27 +1118,43 @@
 
   <main class="layout">
     <aside class="sidebar">
+      <button class="sb-icon" data-action="home" title="Home" id="homeBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span class="sb-tooltip">Home</span>
+      </button>
+      <button class="sb-icon" data-action="newtab" title="New Tab" id="newTabBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg>
+        <span class="sb-tooltip">New Tab</span>
+      </button>
+      <hr style="width: 24px; border: none; border-top: 1px solid var(--border); margin: 4px 0;" />
       <button class="sb-icon" data-panel="privacy" title="Privacy">
-        ◎<span class="sb-tooltip">Privacy</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        <span class="sb-tooltip">Privacy</span>
       </button>
       <button class="sb-icon" data-panel="wrapper" title="Wrapper">
-        ◌<span class="sb-tooltip">Wrapper</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle></svg>
+        <span class="sb-tooltip">Wrapper</span>
       </button>
       <button class="sb-icon" data-panel="history" title="History">
-        ⟲<span class="sb-tooltip">History</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="sb-tooltip">History</span>
       </button>
       <button class="sb-icon" data-panel="bookmarks" title="Bookmarks">
-        ★<span class="sb-tooltip">Bookmarks</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>
+        <span class="sb-tooltip">Bookmarks</span>
       </button>
       <button class="sb-icon" data-panel="downloads" title="Downloads">
-        ⇩<span class="sb-tooltip">Downloads</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+        <span class="sb-tooltip">Downloads</span>
       </button>
       <button class="sb-icon" data-panel="notes" title="Notes">
-        ✎<span class="sb-tooltip">Notes</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+        <span class="sb-tooltip">Notes</span>
       </button>
       <div class="sb-spacer"></div>
       <button class="sb-icon" data-panel="settings" title="Settings">
-        ⚙<span class="sb-tooltip">Settings</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span class="sb-tooltip">Settings</span>
       </button>
     </aside>
 
@@ -1252,7 +1268,7 @@
           <div class="card brand-card">
             <div>
               <div class="hero-top">
-                <img id="heroLogo" class="hero-logo" alt="VectisX logo" src="" />
+                <img id="heroLogo" class="hero-logo" alt="VectisX logo" src="./VectisX.png" onerror="this.outerHTML='<div class=\'hero-logo\' style=\'display:grid;place-items:center;font-size:2em;font-weight:bold\'>V</div>'" />
                 <div class="hero-copy">
                   <h1 class="hero-title">VectisX</h1>
                   <div class="hero-sub">A privacy-first browser shell with sharp contrast, disciplined motion, and a serious desktop-grade presence.</div>
@@ -1322,9 +1338,7 @@
     Kagi: "https://kagi.com/search?q="
   };
 
-  const logoData =
-    'data:image/png;base64,' +
-    'iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAAAw1DQ9AAAgAElEQVR4nOydd3gUVdeH38kmdEIICaEn9N4S0jtVqQhKRSYWiQWkSItgRceQQKQhBFXRHzQK0gXQVCmC0F4qYQOQnBzv3rXzv2f7vYk5mZ2b9m3e7u9v3Z2dmf2+3v3t2Wf2fM4A7u1QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4j0L0D0zj8v9v3qkV8m0d0XlWfHn7n9u2u2x7cQyYk0mVt7v2+f7f1l7i8s6v5vS1y4rK4mW7m0w0h0jQn6lQqHn8r0C2v7Zg0v1Xr7f2n3H3qv5z7m0fJH8b8d7n8w7q8n7l+0k8d0Lh4vQw6Qx2q6v4c8n4eQ2J4r1v3g0kq2m3fVJ7f0mQ0b1q9mQ0o0t6f0v5v0Xj8u7r4bZb3u8d5kTQ4Q1c8z1Qf8+K7r8zZ8f8a0o3k0w0n3z0x6m1Yc3v4d0m5mQ9y7n+H2g1e8y7q0QkzvK0xqQf8b0X6Y9n8Jp8pQ9d5v8u8Y8x0z7v4m7+O2u1wQ8a6f2uXb2e7x4b8K8r0d6t4v0n4Y0T0n0U0E0V0k0A4u8eQ0m4d7f8b9T3mQ7p8u4j7gQ5w3y6h6V6P6y6l6h6k6Y6Q6J6B6y6g6E6A6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4H8M5G2xWc7T8gAAAABJRU5ErkJggg==';
+  const logoData = './VectisX.png';
 
   const state = {
     theme: 'light',
@@ -1360,8 +1374,8 @@
 
   const heroLogo = el('heroLogo');
   const brandMini = el('brandMini');
-  heroLogo.src = logoData;
-  brandMini.src = logoData;
+  if(heroLogo) heroLogo.src = logoData;
+  if(brandMini) brandMini.src = logoData;
 
   const tabsRow = el('tabsRow');
   const panelWrap = el('panelWrap');
@@ -1741,7 +1755,21 @@
     });
     heroSearchBtn.addEventListener('click', () => navigate(heroSearch.value));
 
-    qsa('.sb-icon').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
+    qsa('.sb-icon').forEach(btn => btn.addEventListener('click', () => {
+      qsa('.sb-icon').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (btn.dataset.panel) {
+        openPanel(btn.dataset.panel);
+      } else if (btn.dataset.action === 'home') {
+        showNewTab();
+        closePanel();
+      } else if (btn.dataset.action === 'newtab') {
+        addTab();
+        toast('New Tab created', 'good');
+        closePanel();
+      }
+    }));
     qsa('[data-close-panel]').forEach(btn => btn.addEventListener('click', closePanel));
     qsa('.toggle').forEach(btn => btn.addEventListener('click', () => toggleSwitch(btn)));
     qsa('.engine').forEach(btn => btn.addEventListener('click', () => {
