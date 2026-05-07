@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -364,7 +363,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: transform .18s var(--ease-out), background .18s var(--ease-out), color .18s var(--ease-out), border-color .18s var(--ease-out), box-shadow .18s var(--ease-out);
+    transition: transform .2s var(--ease-out), background .2s var(--ease-out), color .2s var(--ease-out), border-color .2s var(--ease-out), box-shadow .2s var(--ease-out);
     user-select: none;
   }
 
@@ -373,7 +372,7 @@
     background: var(--surface-2);
     color: var(--text);
     border-color: var(--border-strong);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .nav-btn:active,
@@ -482,7 +481,7 @@
   .sb-icon:hover {
     background: var(--surface-2);
     color: var(--text);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.05);
   }
 
   .sb-icon.active {
@@ -517,18 +516,23 @@
   .sb-spacer { flex: 1; }
 
   .panel-wrap {
-    width: 0;
-    min-width: 0;
-    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 320px;
+    z-index: 1000;
+    transform: translateX(100%);
     background: var(--bg-elev);
-    border-right: 1px solid var(--border);
-    transition: width .32s var(--ease-out);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow-strong);
+    transition: transform 0.25s ease;
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
 
-  .panel-wrap.open { width: 324px; }
+  .panel-wrap.open { transform: translateX(0); }
 
   .panel {
     display: none;
@@ -758,9 +762,9 @@
     background: var(--surface);
     color: var(--text);
     font-weight: 700;
-    transition: transform .16s var(--ease-out), background .16s var(--ease-out), border-color .16s var(--ease-out);
+    transition: transform .2s var(--ease-out), background .2s var(--ease-out), border-color .2s var(--ease-out);
   }
-  .btn:hover { background: var(--surface-2); border-color: var(--border-strong); transform: translateY(-1px); }
+  .btn:hover { background: var(--surface-2); border-color: var(--border-strong); transform: translateY(-2px); }
   .btn.primary { background: var(--accent); border-color: transparent; color: #fff; }
   .btn.primary:hover { background: var(--accent-2); }
 
@@ -798,6 +802,15 @@
     0% { opacity: 0; transform: scale(1.01); }
     35% { opacity: 1; }
     100% { opacity: 0; transform: scale(1); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease both;
   }
 
   .newtab {
@@ -1007,9 +1020,9 @@
     display: grid;
     place-items: center;
     box-shadow: 0 14px 26px rgba(200,28,28,.22);
-    transition: transform .18s var(--ease-out), filter .18s var(--ease-out);
+    transition: transform .2s var(--ease-out), filter .2s var(--ease-out);
   }
-  .search-btn:hover { transform: translateY(-50%) scale(1.04); filter: brightness(1.03); }
+  .search-btn:hover { transform: translateY(-52%) scale(1.04); filter: brightness(1.03); }
   .search-btn:active { transform: translateY(-50%) scale(.94); }
 
   .quick-grid {
@@ -1103,7 +1116,7 @@
     .tool-btn.brand { display: none; }
     .hero-footer { grid-template-columns: 1fr; }
     .quick-grid { grid-template-columns: 1fr; }
-    .panel-wrap.open { width: min(88vw, 320px); }
+    .panel-wrap { width: 280px; }
   }
 </style>
 </head>
@@ -1124,7 +1137,6 @@
     </div>
 
     <div class="chrome">
-      
       <div class="nav-row">
         <div class="nav-group">
           <button class="nav-btn" id="backBtn" title="Back">←</button>
@@ -1134,7 +1146,7 @@
         <input class="omnibox" id="omnibox" type="text" placeholder="Search the web or enter a URL" spellcheck="false" autocomplete="off" />
         <div class="nav-group">
           <button class="tool-btn brand" id="themeBtn" title="Theme">Light</button>
-          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -1183,108 +1195,6 @@
       </div>
       <div class="tab-list" id="tabsRow"></div>
     </aside>
-
-    <section class="panel-wrap" id="panelWrap">
-      <div class="panel" id="panel-privacy">
-        <div class="panel-head"><div class="panel-title">Privacy & Security</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body">
-          <div class="section">
-            <div class="section-label">Protection</div>
-            <div class="row"><div class="row-main"><div class="row-title">Ad Blocker</div><div class="row-sub">Blocks trackers and banners</div></div><button class="toggle on" data-toggle="Ad Blocker"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Fingerprint Shield</div><div class="row-sub">Limits canvas and font leaks</div></div><button class="toggle on" data-toggle="Fingerprint Shield"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">HTTPS Upgrade</div><div class="row-sub">Forces secure connections</div></div><button class="toggle on" data-toggle="HTTPS Upgrade"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Cookie Isolation</div><div class="row-sub">Separates third-party cookies</div></div><button class="toggle" data-toggle="Cookie Isolation"></button></div>
-          </div>
-          <div class="section">
-            <div class="section-label">Status</div>
-            <div class="chips">
-              <div class="chip">Blocked <strong id="statBlocked">1,247</strong></div>
-              <div class="chip">Trackers <strong id="statTrackers">389</strong></div>
-              <div class="chip">Saved <strong id="statSaved">18.4s</strong></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-wrapper">
-        <div class="panel-head"><div class="panel-title">Wrapper</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body">
-          <div class="section">
-            <div class="section-label">Search Engine</div>
-            <div class="grid-2" id="engineGrid">
-              <button class="engine selected" data-engine="Google">Google</button>
-              <button class="engine" data-engine="Bing">Bing</button>
-              <button class="engine" data-engine="DuckDuckGo">DuckDuckGo</button>
-              <button class="engine" data-engine="Brave">Brave</button>
-              <button class="engine" data-engine="Ecosia">Ecosia</button>
-              <button class="engine" data-engine="Kagi">Kagi</button>
-            </div>
-          </div>
-          <div class="section">
-            <div class="section-label">Browser Features</div>
-            <div class="row"><div class="row-main"><div class="row-title">JavaScript</div><div class="row-sub">Toggle script execution</div></div><button class="toggle on" data-toggle="JavaScript"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Images</div><div class="row-sub">Load page images</div></div><button class="toggle on" data-toggle="Images"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Media Autoplay</div><div class="row-sub">Allow automatic playback</div></div><button class="toggle" data-toggle="Media Autoplay"></button></div>
-          </div>
-          <div class="section">
-            <div class="section-label">Performance</div>
-            <div class="row"><div class="row-main"><div class="row-title">Smart Preload</div><div class="row-sub">Prefetch likely next pages</div></div><button class="toggle on" data-toggle="Smart Preload"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Data Saver</div><div class="row-sub">Compress heavy content</div></div><button class="toggle" data-toggle="Data Saver"></button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel history" id="panel-history">
-        <div class="panel-head"><div class="panel-title">History</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body" id="historyList"></div>
-      </div>
-
-      <div class="panel bookmarks" id="panel-bookmarks">
-        <div class="panel-head"><div class="panel-title">Bookmarks</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body" id="bookmarkList"></div>
-      </div>
-
-      <div class="panel downloads" id="panel-downloads">
-        <div class="panel-head"><div class="panel-title">Downloads</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body" id="downloadList"></div>
-      </div>
-
-      <div class="panel" id="panel-notes">
-        <div class="panel-head"><div class="panel-title">Notes</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body">
-          <div class="section">
-            <div class="section-label">Private Notes</div>
-            <textarea class="notes" id="notesArea" placeholder="Write anything. Notes stay local in this demo."></textarea>
-            <div class="btn-row">
-              <button class="btn primary" id="saveNoteBtn">Save Note</button>
-              <button class="btn" id="clearNoteBtn">Clear</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-settings">
-        <div class="panel-head"><div class="panel-title">Settings</div><button class="panel-close" data-close-panel>✕</button></div>
-        <div class="panel-body">
-          <div class="section">
-            <div class="section-label">Appearance</div>
-            <div class="row"><div class="row-main"><div class="row-title">Theme</div><div class="row-sub" id="themeLabel">Light</div></div><button class="btn" id="cycleThemeBtn">Change</button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Compact Mode</div><div class="row-sub">Reduces UI spacing</div></div><button class="toggle" data-toggle="Compact Mode"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Tab Preview</div><div class="row-sub">Show richer tab treatment</div></div><button class="toggle on" data-toggle="Tab Preview"></button></div>
-          </div>
-          <div class="section">
-            <div class="section-label">Privacy</div>
-            <div class="row"><div class="row-main"><div class="row-title">Do Not Track</div><div class="row-sub">Send the DNT header</div></div><button class="toggle on" data-toggle="Do Not Track"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Clear on Exit</div><div class="row-sub">Wipe data on close</div></div><button class="toggle" data-toggle="Clear on Exit"></button></div>
-          </div>
-          <div class="section">
-            <div class="section-label">Advanced</div>
-            <div class="row"><div class="row-main"><div class="row-title">Hardware Acceleration</div><div class="row-sub">Use GPU rendering</div></div><button class="toggle on" data-toggle="Hardware Acceleration"></button></div>
-            <div class="row"><div class="row-main"><div class="row-title">Dev Tools</div><div class="row-sub">Enable inspector access</div></div><button class="toggle" data-toggle="Dev Tools"></button></div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <section class="content" id="contentArea">
       <iframe class="frame" id="browserFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
@@ -1340,13 +1250,115 @@
             </div>
 
             <div class="footer-note">
-              VectisX is designed to feel like a real browser product: high-contrast surfaces, crisp controls, macOS-like traffic lights, animated transitions, and a logo system that remains readable in light mode.
+              Welcome back. Start browsing or open a new tab.
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <section class="panel-wrap" id="panelWrap">
+    <div class="panel" id="panel-privacy">
+      <div class="panel-head"><div class="panel-title">Privacy & Security</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body">
+        <div class="section">
+          <div class="section-label">Protection</div>
+          <div class="row"><div class="row-main"><div class="row-title">Ad Blocker</div><div class="row-sub">Blocks trackers and banners</div></div><button class="toggle on" data-toggle="Ad Blocker"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Fingerprint Shield</div><div class="row-sub">Limits canvas and font leaks</div></div><button class="toggle on" data-toggle="Fingerprint Shield"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">HTTPS Upgrade</div><div class="row-sub">Forces secure connections</div></div><button class="toggle on" data-toggle="HTTPS Upgrade"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Cookie Isolation</div><div class="row-sub">Separates third-party cookies</div></div><button class="toggle" data-toggle="Cookie Isolation"></button></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Status</div>
+          <div class="chips">
+            <div class="chip">Blocked <strong id="statBlocked">1,247</strong></div>
+            <div class="chip">Trackers <strong id="statTrackers">389</strong></div>
+            <div class="chip">Saved <strong id="statSaved">18.4s</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-wrapper">
+      <div class="panel-head"><div class="panel-title">Wrapper</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body">
+        <div class="section">
+          <div class="section-label">Search Engine</div>
+          <div class="grid-2" id="engineGrid">
+            <button class="engine selected" data-engine="Google">Google</button>
+            <button class="engine" data-engine="Bing">Bing</button>
+            <button class="engine" data-engine="DuckDuckGo">DuckDuckGo</button>
+            <button class="engine" data-engine="Brave">Brave</button>
+            <button class="engine" data-engine="Ecosia">Ecosia</button>
+            <button class="engine" data-engine="Kagi">Kagi</button>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Browser Features</div>
+          <div class="row"><div class="row-main"><div class="row-title">JavaScript</div><div class="row-sub">Toggle script execution</div></div><button class="toggle on" data-toggle="JavaScript"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Images</div><div class="row-sub">Load page images</div></div><button class="toggle on" data-toggle="Images"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Media Autoplay</div><div class="row-sub">Allow automatic playback</div></div><button class="toggle" data-toggle="Media Autoplay"></button></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Performance</div>
+          <div class="row"><div class="row-main"><div class="row-title">Smart Preload</div><div class="row-sub">Prefetch likely next pages</div></div><button class="toggle on" data-toggle="Smart Preload"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Data Saver</div><div class="row-sub">Compress heavy content</div></div><button class="toggle" data-toggle="Data Saver"></button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel history" id="panel-history">
+      <div class="panel-head"><div class="panel-title">History</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body" id="historyList"></div>
+    </div>
+
+    <div class="panel bookmarks" id="panel-bookmarks">
+      <div class="panel-head"><div class="panel-title">Bookmarks</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body" id="bookmarkList"></div>
+    </div>
+
+    <div class="panel downloads" id="panel-downloads">
+      <div class="panel-head"><div class="panel-title">Downloads</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body" id="downloadList"></div>
+    </div>
+
+    <div class="panel" id="panel-notes">
+      <div class="panel-head"><div class="panel-title">Notes</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body">
+        <div class="section">
+          <div class="section-label">Private Notes</div>
+          <textarea class="notes" id="notesArea" placeholder="Write anything. Notes stay local in this demo."></textarea>
+          <div class="btn-row">
+            <button class="btn primary" id="saveNoteBtn">Save Note</button>
+            <button class="btn" id="clearNoteBtn">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-settings">
+      <div class="panel-head"><div class="panel-title">Settings</div><button class="panel-close" data-close-panel>✕</button></div>
+      <div class="panel-body">
+        <div class="section">
+          <div class="section-label">Appearance</div>
+          <div class="row"><div class="row-main"><div class="row-title">Theme</div><div class="row-sub" id="themeLabel">Light</div></div><button class="btn" id="cycleThemeBtn">Change</button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Compact Mode</div><div class="row-sub">Reduces UI spacing</div></div><button class="toggle" data-toggle="Compact Mode"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Tab Preview</div><div class="row-sub">Show richer tab treatment</div></div><button class="toggle on" data-toggle="Tab Preview"></button></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Privacy</div>
+          <div class="row"><div class="row-main"><div class="row-title">Do Not Track</div><div class="row-sub">Send the DNT header</div></div><button class="toggle on" data-toggle="Do Not Track"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Clear on Exit</div><div class="row-sub">Wipe data on close</div></div><button class="toggle" data-toggle="Clear on Exit"></button></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Advanced</div>
+          <div class="row"><div class="row-main"><div class="row-title">Hardware Acceleration</div><div class="row-sub">Use GPU rendering</div></div><button class="toggle on" data-toggle="Hardware Acceleration"></button></div>
+          <div class="row"><div class="row-main"><div class="row-title">Dev Tools</div><div class="row-sub">Enable inspector access</div></div><button class="toggle" data-toggle="Dev Tools"></button></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <div class="toast-wrap" id="toastWrap"></div>
@@ -1372,9 +1384,6 @@
     tabs: [],
     activeTab: 0,
     panel: null,
-    readerOn: false,
-    shieldOn: false,
-    vpnOn: false,
     history: [
       { title: 'GitHub', url: 'https://github.com', icon: '⌘', time: '2 min ago' },
       { title: 'Google Search', url: 'https://google.com', icon: '◉', time: '14 min ago' },
@@ -1533,6 +1542,13 @@
     toast('Navigation updated', 'good');
   }
 
+  function triggerFade() {
+    const area = el('contentArea');
+    area.classList.remove('fade-in');
+    void area.offsetWidth;
+    area.classList.add('fade-in');
+  }
+
   function addTab(url = '') {
     const tab = createTab('New Tab', '', '◉');
     state.tabs.push(tab);
@@ -1544,6 +1560,7 @@
       omnibox.value = '';
       showNewTab();
     }
+    triggerFade();
     updateNavState();
     toast('New tab opened', 'good');
   }
@@ -1579,6 +1596,7 @@
       omnibox.value = '';
       showNewTab();
     }
+    triggerFade();
     updateNavState();
   }
 
@@ -1713,23 +1731,6 @@
     else if (name === 'Images') toast(`Images ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'warn');
     else if (name === 'Dev Tools') toast(`Dev Tools ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'info');
     else toast(`${name} ${on ? 'enabled' : 'disabled'}`, on ? 'good' : 'info');
-  }
-
-  function toggleReader() {
-    state.readerOn = !state.readerOn;
-    el('readerBtn').classList.toggle('active', state.readerOn);
-    toast(`Reader mode ${state.readerOn ? 'enabled' : 'disabled'}`, 'info');
-  }
-
-  function toggleShield() {
-    state.shieldOn = !state.shieldOn;
-    el('shieldBtn').classList.toggle('active', state.shieldOn);
-    toast(`Shield ${state.shieldOn ? 'enabled' : 'disabled'}`, state.shieldOn ? 'good' : 'warn');
-  }
-
-  function toggleVPN() {
-    state.vpnOn = !state.vpnOn;
-    toast(`VPN ${state.vpnOn ? 'connected' : 'disconnected'}`, state.vpnOn ? 'good' : 'warn');
   }
 
   function saveNote() {
