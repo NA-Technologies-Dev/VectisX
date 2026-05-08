@@ -1495,8 +1495,8 @@
       const btn = document.createElement('button');
       btn.className = `tab ${i === state.activeTab ? 'active' : ''}`;
       btn.innerHTML = `
-        <img class="tab-fav" alt="" src="${tab.icon || './VectisX.png'}" onerror="this.style.display='none'">
-        <div class="tab-title">${tab.title}</div>
+        <img class="tab-fav" alt="" src="${escapeHtml(tab.icon || './VectisX.png')}" onerror="this.style.display='none'">
+        <div class="tab-title">${escapeHtml(tab.title)}</div>
         <button class="tab-close" title="Close tab">✕</button>
       `;
       btn.addEventListener('click', (e) => {
@@ -1686,7 +1686,7 @@
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
-        <div class="item-icon">${h.icon}</div>
+        <div class="item-icon">${escapeHtml(h.icon)}</div>
         <div class="item-main">
           <div class="item-title">${escapeHtml(h.title)}</div>
           <div class="item-sub">${escapeHtml(h.time)}</div>
@@ -1704,7 +1704,7 @@
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
-        <div class="item-icon">${b.icon}</div>
+        <div class="item-icon">${escapeHtml(b.icon)}</div>
         <div class="item-main">
           <div class="item-title">${escapeHtml(b.title)}</div>
           <div class="item-sub">${escapeHtml(b.url)}</div>
@@ -1725,7 +1725,7 @@
       item.style.alignItems = 'stretch';
       item.innerHTML = `
         <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div class="item-icon">${d.icon}</div>
+          <div class="item-icon">${escapeHtml(d.icon)}</div>
           <div class="item-main">
             <div class="item-title">${escapeHtml(d.name)}</div>
             <div class="item-sub">${escapeHtml(d.size)} · ${d.pct < 100 ? `${d.pct}%` : 'Done'}</div>
