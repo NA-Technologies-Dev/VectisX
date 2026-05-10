@@ -18,7 +18,11 @@
     --shadow-strong: 0 24px 60px rgba(0,0,0,.22);
     --focus-ring: 0 0 0 4px rgba(200,28,28,.16);
     --ease-out: cubic-bezier(.22,1,.36,1);
-    --ease-snap: cubic-bezier(.34,1.56,.64,1);
+    --ease-snap: cubic-bezier(0.4, 0, 0.2, 1.4); /* Premium springy feel */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-fast: 0.15s;
+    --motion-base: 0.25s;
+    --motion-slow: 0.4s;
     --chrome-h: 122px;
     --sidebar-w: 68px;
   }
@@ -222,6 +226,18 @@
 
   .window-brand strong { color: var(--text); font-weight: 700; }
 
+  .workspace-indicator {
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--space-color);
+    color: white;
+    margin-left: 8px;
+  }
+
   .chrome {
     background: var(--surface);
     padding: 10px 16px 12px;
@@ -243,21 +259,53 @@
 
   .tab {
     width: 100%;
-    height: 40px;
+    height: 38px;
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 0 12px;
     border: 1px solid transparent;
-    border-radius: 12px;
+    border-radius: 10px;
     background: transparent;
     color: var(--text-2);
-    transition: transform .2s var(--ease-out), background .2s var(--ease-out), color .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out);
+    transition: transform var(--motion-fast) var(--ease-smooth), background var(--motion-fast) var(--ease-smooth), color var(--motion-fast) var(--ease-smooth);
     position: relative;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     user-select: none;
+  }
+
+  .tab:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .tab.active {
+    background: var(--bg-elev);
+    color: var(--text);
+    border-color: var(--border);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .tab.pinned {
+    width: 38px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    flex: 0 0 38px;
+  }
+
+  .tab.sleeping {
+    opacity: 0.5;
+    filter: grayscale(0.5);
+  }
+
+  .pinned-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 0 4px;
   }
 
   .tab::before {
@@ -444,25 +492,79 @@
     gap: 16px;
     min-height: 0;
     z-index: 10;
-    width: 280px;
-    transition: width 0.3s var(--ease-out);
+    width: 68px; /* Adaptive: default to collapsed */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
   }
 
-  .sidebar.collapsed {
-    width: 68px;
+  .sidebar:hover {
+    width: 280px;
   }
 
-  .sidebar.collapsed .tab-title,
-  .sidebar.collapsed .tab-close {
-    display: none;
+  .sidebar .tab-title,
+  .sidebar .tab-close {
+    opacity: 0;
+    transition: opacity 0.2s var(--ease-out);
+    pointer-events: none;
   }
 
-  .sidebar.collapsed .tab {
+  .sidebar:hover .tab-title,
+  .sidebar:hover .tab-close {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar .tab {
     width: 44px;
     padding: 0;
     justify-content: center;
+    transition: width 0.4s var(--ease-out), padding 0.4s var(--ease-out);
+  }
+
+  .sidebar:hover .tab {
+    width: 100%;
+    padding: 0 12px;
+    justify-content: flex-start;
+  }
+
+  .space-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .space-item {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  }
+
+  .space-item:hover {
+    transform: scale(1.1);
+  }
+
+  .space-item.active {
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--space-color), 0 0 15px var(--accent-soft);
+  }
+
+  .space-item.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    width: 4px;
+    height: 20px;
+    background: var(--space-color);
+    border-radius: 0 4px 4px 0;
   }
 
   .sidebar-icons {
@@ -534,6 +636,18 @@
 
   .sb-spacer { flex: 1; }
 
+  .panel-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.1);
+    backdrop-filter: blur(4px);
+    display: none;
+    animation: fadeIn 0.2s var(--ease-out);
+  }
+
+  .panel-overlay.open { display: block; }
+
   .panel-wrap {
     position: fixed;
     top: 0;
@@ -545,7 +659,7 @@
     border-left: 1px solid var(--border);
     box-shadow: var(--shadow-strong);
     transform: translateX(100%);
-    transition: transform 0.25s var(--ease-out);
+    transition: transform 0.4s var(--ease-snap);
     display: flex;
     flex-direction: column;
   }
@@ -1113,6 +1227,104 @@
 
   .hidden { display: none !important; }
 
+  .palette-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0,0,0,0.15);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+    animation: fadeIn 0.2s var(--ease-out);
+  }
+
+  .palette-overlay.open { display: flex; }
+
+  .palette {
+    width: min(600px, 90vw);
+    background: var(--chrome-2);
+    backdrop-filter: var(--glass);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    box-shadow: var(--shadow-strong);
+    overflow: hidden;
+    transform: translateY(-20px) scale(0.98);
+    transition: transform 0.25s var(--ease-snap), opacity 0.2s var(--ease-out);
+    opacity: 0;
+  }
+
+  .palette-overlay.open .palette {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .palette-input-wrap {
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .palette-input {
+    flex: 1;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .palette-results {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s var(--ease-out), transform 0.1s var(--ease-out);
+  }
+
+  .palette-item:hover, .palette-item.active {
+    background: var(--accent-soft);
+    transform: translateX(4px);
+  }
+
+  .palette-item.active {
+    box-shadow: inset 0 0 0 1px var(--accent-strong);
+  }
+
+  .palette-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+  }
+
+  .palette-item-info { flex: 1; min-width: 0; }
+  .palette-item-title { font-size: 14px; font-weight: 600; }
+  .palette-item-sub { font-size: 11px; color: var(--text-3); }
+
+  .palette-hint {
+    padding: 10px 18px;
+    background: var(--surface);
+    font-size: 11px;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
   @media (max-width: 1100px) {
     .hero { grid-template-columns: 1fr; }
     .brand-card, .search-card { min-height: auto; }
@@ -1139,7 +1351,8 @@
       </div>
       <div class="window-brand">
         <img id="brandMini" alt="VectisX logo" src="./VectisX.png" onerror="this.style.display='none'" />
-        <span><strong>VectisX</strong> / Browser UI</span>
+        <span><strong>VectisX</strong></span>
+        <div id="activeWorkspaceIndicator" class="workspace-indicator" style="--space-color: var(--accent);">Personal</div>
       </div>
       <div style="width:52px"></div>
     </div>
@@ -1161,50 +1374,25 @@
 
   <main class="layout">
     <aside class="sidebar">
-      <button class="sb-icon" id="sidebarToggle" style="position: absolute; top: 12px; left: 12px; z-index: 100; transition: transform 0.3s ease;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line x1="9" x2="9" y1="3" y2="21"></line></svg>
-      </button>
-      <div class="sidebar-icons" style="margin-top: 52px;">
-        <button class="sb-icon" data-action="home" title="Home" id="homeBtn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span class="sb-tooltip">Home</span>
-        </button>
+      <div class="space-list" id="spaceList"></div>
+
+      <div class="pinned-row" id="pinnedRow"></div>
+      <div class="tab-list" id="tabsRow"></div>
+
+      <div class="sidebar-icons" style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto;">
         <button class="sb-icon" data-action="newtab" title="New Tab" id="newTabBtn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg>
           <span class="sb-tooltip">New Tab</span>
-        </button>
-        <hr style="width: 24px; border: none; border-top: 1px solid var(--border); margin: 4px 0;" />
-        <button class="sb-icon" data-panel="privacy" title="Privacy">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-          <span class="sb-tooltip">Privacy</span>
-        </button>
-        <button class="sb-icon" data-panel="wrapper" title="Wrapper">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle></svg>
-          <span class="sb-tooltip">Wrapper</span>
         </button>
         <button class="sb-icon" data-panel="history" title="History">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
           <span class="sb-tooltip">History</span>
         </button>
-        <button class="sb-icon" data-panel="bookmarks" title="Bookmarks">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>
-          <span class="sb-tooltip">Bookmarks</span>
-        </button>
-        <button class="sb-icon" data-panel="downloads" title="Downloads">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
-          <span class="sb-tooltip">Downloads</span>
-        </button>
-        <button class="sb-icon" data-panel="notes" title="Notes">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
-          <span class="sb-tooltip">Notes</span>
-        </button>
-        <div class="sb-spacer"></div>
         <button class="sb-icon" data-panel="settings" title="Settings">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
           <span class="sb-tooltip">Settings</span>
         </button>
       </div>
-      <div class="tab-list" id="tabsRow"></div>
     </aside>
 
     <section class="content" id="contentArea">
@@ -1213,61 +1401,64 @@
       <div class="newtab" id="newTabPage">
         <div class="hero">
           <div class="card brand-card">
-            <div>
-              <div class="hero-top">
-                <img id="heroLogo" class="hero-logo" alt="VectisX logo" src="./VectisX.png" onerror="this.style.display='none'" />
-                <div class="hero-copy">
-                  <h1 class="hero-title">VectisX</h1>
-                  <div class="hero-sub">Welcome back. Start browsing or open a new tab.</div>
+            <div class="section">
+                <div class="section-label">Resume Session</div>
+                <div id="recentTabsGrid" class="quick-grid">
+                    <!-- Dynamic -->
                 </div>
-              </div>
-              <div class="hero-badges">
-                <div class="badge"><span class="badge-dot"></span> Private by default</div>
-                <div class="badge"><span class="badge-dot"></span> Secure chrome</div>
-                <div class="badge"><span class="badge-dot"></span> Aesthetic UI</div>
-              </div>
             </div>
-            <div>
-              <div class="hero-footer">
-                <div class="metric"><div class="metric-value">99.9%</div><div class="metric-label">visual consistency target</div></div>
-                <div class="metric"><div class="metric-value">0 bloat</div><div class="metric-label">no weak empty chrome</div></div>
-                <div class="metric"><div class="metric-value">3 themes</div><div class="metric-label">Light / Dark / Blood</div></div>
-              </div>
+
+            <div class="section">
+                <div class="section-label">Workspaces</div>
+                <div class="chips" id="homeWorkspaces">
+                    <!-- Dynamic -->
+                </div>
             </div>
           </div>
 
           <div class="card search-card">
             <div class="search-head">
-              <h2>Search the web</h2>
+              <h2>Command Center</h2>
               <div class="pill-row">
-                <div class="chip">Secure mode</div>
-                <div class="chip">Local demo</div>
+                <div class="chip">AI Ready</div>
               </div>
             </div>
 
             <div class="search-box">
-              <input class="search-input" id="heroSearch" placeholder="Search or enter a URL" />
+              <input class="search-input" id="heroSearch" placeholder="Ask anything or search..." />
               <button class="search-btn" id="heroSearchBtn" title="Search">↗</button>
             </div>
 
             <div class="section" style="margin-top:2px; margin-bottom:0;">
-              <div class="section-label">Quick access</div>
+              <div class="section-label">Quick Actions</div>
               <div class="quick-grid">
-                <div class="quick" data-url="https://google.com"><div class="quick-ico">⌘</div><div><div class="quick-title">Google</div><div class="quick-sub">Search engine</div></div></div>
-                <div class="quick" data-url="https://github.com"><div class="quick-ico">⌥</div><div><div class="quick-title">GitHub</div><div class="quick-sub">Code & repos</div></div></div>
-                <div class="quick" data-url="https://youtube.com"><div class="quick-ico">▶</div><div><div class="quick-title">YouTube</div><div class="quick-sub">Video hub</div></div></div>
-                <div class="quick" data-url="https://news.ycombinator.com"><div class="quick-ico">◫</div><div><div class="quick-title">Hacker News</div><div class="quick-sub">Tech feed</div></div></div>
+                <div class="quick" id="btnPaletteAction"><div class="quick-ico">⌘</div><div><div class="quick-title">Command Palette</div><div class="quick-sub">Ctrl + K</div></div></div>
+                <div class="quick" id="btnNewTabAction"><div class="quick-ico">+</div><div><div class="quick-title">New Tab</div><div class="quick-sub">Create workspace tab</div></div></div>
+                <div class="quick" data-url="https://chat.openai.com"><div class="quick-ico">✧</div><div><div class="quick-title">AI Assistant</div><div class="quick-sub">Summarize & help</div></div></div>
+                <div class="quick" id="btnNotesAction"><div class="quick-ico">✎</div><div><div class="quick-title">Notes</div><div class="quick-sub">Quick thoughts</div></div></div>
               </div>
-            </div>
-
-            <div class="footer-note">
-              Welcome back. Start browsing or open a new tab.
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+</div>
+
+<div class="panel-overlay" id="panelOverlay"></div>
+
+<div class="palette-overlay" id="paletteOverlay">
+  <div class="palette" id="palette">
+    <div class="palette-input-wrap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" class="palette-input" id="paletteInput" placeholder="Search tabs, spaces, or commands..." spellcheck="false" autocomplete="off" />
+    </div>
+    <div class="palette-results" id="paletteResults"></div>
+    <div class="palette-hint">
+      <span>↑↓ to navigate · Enter to select</span>
+      <span>Esc to close</span>
+    </div>
+  </div>
 </div>
 
 <section class="panel-wrap" id="panelWrap">
@@ -1392,9 +1583,16 @@
   const state = {
     theme: 'light',
     engine: 'Google',
-    tabs: [],
-    activeTab: 0,
+    activeSpace: 0,
+    spaces: [
+      { id: 'personal', name: 'Personal', icon: '🏠', color: 'var(--accent)', tabs: [], activeTab: 0, pinned: [] },
+      { id: 'coding', name: 'Coding', icon: '💻', color: '#3b82f6', tabs: [], activeTab: 0, pinned: [] },
+      { id: 'ai', name: 'AI', icon: '🤖', color: '#8b5cf6', tabs: [], activeTab: 0, pinned: [] },
+      { id: 'school', name: 'School', icon: '📚', color: '#f59e0b', tabs: [], activeTab: 0, pinned: [] },
+      { id: 'research', name: 'Research', icon: '🔬', color: '#10b981', tabs: [], activeTab: 0, pinned: [] }
+    ],
     panel: null,
+    palette: false,
     history: [
       { title: 'GitHub', url: 'https://github.com', icon: '⌘', time: '2 min ago' },
       { title: 'Google Search', url: 'https://google.com', icon: '◉', time: '14 min ago' },
@@ -1417,6 +1615,11 @@
   const el = (id) => document.getElementById(id);
   const qs = (s, r = document) => r.querySelector(s);
   const qsa = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const getSpace = () => state.spaces[state.activeSpace];
+  const getTabs = () => getSpace().tabs;
+  const getActiveTabIdx = () => getSpace().activeTab;
+  const getActiveTab = () => getTabs()[getActiveTabIdx()];
 
   const triggerFade = (cb) => {
     el('contentArea').classList.add('fading');
@@ -1485,33 +1688,78 @@
       url,
       favicon,
       history: [],
-      historyIndex: -1
+      historyIndex: -1,
+      pinned: false,
+      sleeping: false
     };
   }
 
   function renderTabs() {
-    qsa('.tab', tabsRow).forEach(t => t.remove());
-    state.tabs.forEach((tab, i) => {
+    const tabsRow = el('tabsRow');
+    const pinnedRow = el('pinnedRow');
+    tabsRow.innerHTML = '';
+    pinnedRow.innerHTML = '';
+
+    const tabs = getTabs();
+    const activeIdx = getActiveTabIdx();
+
+    tabs.forEach((tab, i) => {
       const btn = document.createElement('button');
-      btn.className = `tab ${i === state.activeTab ? 'active' : ''}`;
+      btn.className = `tab ${i === activeIdx ? 'active' : ''} ${tab.pinned ? 'pinned' : ''} ${tab.sleeping ? 'sleeping' : ''}`;
       btn.innerHTML = `
-        <img class="tab-fav" alt="" src="${escapeHtml(tab.icon || './VectisX.png')}" onerror="this.style.display='none'">
-        <div class="tab-title">${escapeHtml(tab.title)}</div>
-        <button class="tab-close" title="Close tab">✕</button>
+        <img class="tab-fav" alt="" src="${tab.favicon || './VectisX.png'}" onerror="this.style.display='none'">
+        ${!tab.pinned ? `<div class="tab-title">${tab.title}</div><button class="tab-close" title="Close tab">✕</button>` : ''}
       `;
+
       btn.addEventListener('click', (e) => {
         if (e.target.closest('.tab-close')) return;
         switchTab(i);
       });
-      btn.querySelector('.tab-close').addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeTab(i);
+
+      if (!tab.pinned) {
+        btn.querySelector('.tab-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeTab(i);
+        });
+      }
+
+      // Context menu mock
+      btn.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        tab.pinned = !tab.pinned;
+        renderTabs();
+        toast(tab.pinned ? 'Tab pinned' : 'Tab unpinned', 'info');
       });
-      tabsRow.appendChild(btn);
+
+      if (tab.pinned) pinnedRow.appendChild(btn);
+      else tabsRow.appendChild(btn);
+    });
+  }
+
+  function renderHome() {
+    const tabsGrid = el('recentTabsGrid');
+    tabsGrid.innerHTML = '';
+    state.history.slice(0, 4).forEach(h => {
+        const item = document.createElement('div');
+        item.className = 'quick';
+        item.innerHTML = `<div class="quick-ico">${h.icon}</div><div><div class="quick-title">${h.title}</div><div class="quick-sub">${h.time}</div></div>`;
+        item.onclick = () => navigate(h.url);
+        tabsGrid.appendChild(item);
+    });
+
+    const wsWrap = el('homeWorkspaces');
+    wsWrap.innerHTML = '';
+    state.spaces.forEach((s, i) => {
+        const chip = document.createElement('button');
+        chip.className = 'chip';
+        chip.innerHTML = `${s.icon} ${s.name}`;
+        chip.onclick = () => switchSpace(i);
+        wsWrap.appendChild(chip);
     });
   }
 
   function showNewTab() {
+    renderHome();
     triggerFade(() => {
       newTabPage.classList.remove('hidden');
       browserFrame.classList.remove('visible');
@@ -1536,6 +1784,29 @@
   function normalizeUrl(input) {
     const raw = input.trim();
     if (!raw) return '';
+
+    // Command & Calc support
+    if (raw === '/gh') return 'https://github.com';
+
+    // Simple Calculator logic
+    if (/^[0-9+\-*/().\s]+$/.test(raw) && /[+\-*/]/.test(raw)) {
+        try {
+            const result = eval(raw);
+            toast(`${raw} = ${result}`, 'good');
+            return (engines[state.engine] || engines.Google) + encodeURIComponent(raw);
+        } catch(e) {}
+    }
+
+    if (raw.startsWith('/')) {
+        const cmd = raw.slice(1).toLowerCase();
+        if (cmd === 'settings') { openPanel('settings'); return ''; }
+        if (cmd === 'history') { openPanel('history'); return ''; }
+        if (cmd === 'ai') { toast('AI layer placeholder triggered', 'info'); return ''; }
+
+        // Prepare for more commands
+        toast(`Command detected: ${raw}`, 'info');
+    }
+
     const urlish = /^https?:\/\//i.test(raw) || /^[a-z0-9-]+\.[a-z]{2,}/i.test(raw);
     if (urlish) return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
     return (engines[state.engine] || engines.Google) + encodeURIComponent(raw);
@@ -1544,7 +1815,7 @@
   function navigate(input) {
     const url = normalizeUrl(input);
     if (!url) return;
-    const tab = state.tabs[state.activeTab];
+    const tab = getActiveTab();
     if (!tab) return;
     tab.history.splice(tab.historyIndex + 1);
     tab.history.push(url);
@@ -1567,8 +1838,9 @@
 
   function addTab(url = '') {
     const tab = createTab('New Tab', '', '◉');
-    state.tabs.push(tab);
-    state.activeTab = state.tabs.length - 1;
+    const space = getSpace();
+    space.tabs.push(tab);
+    space.activeTab = space.tabs.length - 1;
     renderTabs();
     if (url) {
       navigate(url);
@@ -1581,14 +1853,15 @@
   }
 
   function closeTab(index) {
-    if (state.tabs.length <= 1) {
+    const space = getSpace();
+    if (space.tabs.length <= 1) {
       toast('You need at least one tab open', 'warn');
       return;
     }
-    state.tabs.splice(index, 1);
-    if (state.activeTab >= state.tabs.length) state.activeTab = state.tabs.length - 1;
+    space.tabs.splice(index, 1);
+    if (space.activeTab >= space.tabs.length) space.activeTab = space.tabs.length - 1;
     renderTabs();
-    const current = state.tabs[state.activeTab];
+    const current = getActiveTab();
     if (current && current.url) {
       omnibox.value = current.url;
       showBrowser(current.url);
@@ -1601,8 +1874,8 @@
   }
 
   function switchTab(index) {
-    state.activeTab = index;
-    const tab = state.tabs[index];
+    getSpace().activeTab = index;
+    const tab = getTabs()[index];
     renderTabs();
     if (tab?.url) {
       omnibox.value = tab.url;
@@ -1615,13 +1888,13 @@
   }
 
   function updateNavState() {
-    const tab = state.tabs[state.activeTab];
+    const tab = getActiveTab();
     el('backBtn').disabled = !(tab && tab.historyIndex > 0);
     el('forwardBtn').disabled = !(tab && tab.historyIndex < tab.history.length - 1);
   }
 
   function goBack() {
-    const tab = state.tabs[state.activeTab];
+    const tab = getActiveTab();
     if (!tab || tab.historyIndex <= 0) return;
     tab.historyIndex--;
     const url = tab.history[tab.historyIndex];
@@ -1634,7 +1907,7 @@
   }
 
   function goForward() {
-    const tab = state.tabs[state.activeTab];
+    const tab = getActiveTab();
     if (!tab || tab.historyIndex >= tab.history.length - 1) return;
     tab.historyIndex++;
     const url = tab.history[tab.historyIndex];
@@ -1647,7 +1920,7 @@
   }
 
   function reload() {
-    const tab = state.tabs[state.activeTab];
+    const tab = getActiveTab();
     if (!tab?.url) {
       toast('Nothing to reload', 'warn');
       return;
@@ -1659,6 +1932,7 @@
 
   function openPanel(name) {
     state.panel = name;
+    el('panelOverlay').classList.add('open');
     panelWrap.classList.add('open');
     qsa('.panel', panelWrap).forEach(p => p.classList.remove('visible'));
     const panel = el(`panel-${name}`);
@@ -1668,9 +1942,126 @@
 
   function closePanel() {
     state.panel = null;
+    el('panelOverlay').classList.remove('open');
     panelWrap.classList.remove('open');
     qsa('.panel', panelWrap).forEach(p => p.classList.remove('visible'));
     qsa('.sb-icon, .tab').forEach(b => b.classList.remove('active'));
+  }
+
+  const paletteOverlay = el('paletteOverlay');
+  const paletteInput = el('paletteInput');
+  const paletteResults = el('paletteResults');
+  let paletteIndex = 0;
+  let paletteItems = [];
+
+  function openPalette() {
+    state.palette = true;
+    paletteOverlay.classList.add('open');
+    paletteInput.value = '';
+    paletteInput.focus();
+    renderPaletteResults();
+  }
+
+  function closePalette() {
+    state.palette = false;
+    paletteOverlay.classList.remove('open');
+    paletteInput.blur();
+  }
+
+  function renderPaletteResults() {
+    const query = paletteInput.value.toLowerCase().trim();
+    paletteResults.innerHTML = '';
+    paletteItems = [];
+
+    // Search tabs in all spaces
+    state.spaces.forEach((space, sIdx) => {
+        space.tabs.forEach((tab, tIdx) => {
+            if (!query || tab.title.toLowerCase().includes(query) || (tab.url && tab.url.toLowerCase().includes(query))) {
+                paletteItems.push({
+                    type: 'tab',
+                    title: tab.title,
+                    sub: `Tab in ${space.name} · ${tab.url || 'New Tab'}`,
+                    icon: tab.favicon || '◉',
+                    action: () => {
+                        switchSpace(sIdx);
+                        switchTab(tIdx);
+                        closePalette();
+                    }
+                });
+            }
+        });
+    });
+
+    // Search spaces
+    state.spaces.forEach((space, sIdx) => {
+        if (!query || space.name.toLowerCase().includes(query)) {
+            paletteItems.push({
+                type: 'space',
+                title: `Switch to ${space.name}`,
+                sub: 'Workspace switching',
+                icon: space.icon,
+                action: () => {
+                    switchSpace(sIdx);
+                    closePalette();
+                }
+            });
+        }
+    });
+
+    // Commands
+    const commands = [
+        { title: 'New Tab', sub: 'Create a new tab in current space', icon: '+', action: () => { addTab(); closePalette(); } },
+        { title: 'Clear History', sub: 'Wipe browsing history', icon: '✕', action: () => { state.history = []; renderHistory(); toast('History cleared', 'warn'); closePalette(); } },
+        { title: 'Settings', sub: 'Open browser settings', icon: '⚙', action: () => { openPanel('settings'); closePalette(); } }
+    ];
+
+    commands.forEach(cmd => {
+        if (!query || cmd.title.toLowerCase().includes(query)) {
+            paletteItems.push({ ...cmd, type: 'command' });
+        }
+    });
+
+    paletteItems.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = `palette-item ${idx === paletteIndex ? 'active' : ''}`;
+        div.innerHTML = `
+            <div class="palette-item-icon">${item.icon}</div>
+            <div class="palette-item-info">
+                <div class="palette-item-title">${item.title}</div>
+                <div class="palette-item-sub">${item.sub}</div>
+            </div>
+        `;
+        div.onclick = item.action;
+        paletteResults.appendChild(div);
+    });
+
+    if (paletteItems.length === 0) {
+        paletteResults.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-3); font-size: 13px;">No results found</div>';
+    }
+  }
+
+  function switchSpace(idx) {
+    if (state.activeSpace === idx) return;
+    state.activeSpace = idx;
+
+    const space = state.spaces[idx];
+    const indicator = el('activeWorkspaceIndicator');
+    indicator.textContent = space.name;
+    indicator.style.setProperty('--space-color', space.color);
+
+    // Smooth workspace switch animation
+    triggerFade(() => {
+        renderTabs();
+        const tab = getActiveTab();
+        if (tab?.url) {
+            omnibox.value = tab.url;
+            showBrowser(tab.url);
+        } else {
+            omnibox.value = '';
+            showNewTab();
+        }
+        updateNavState();
+    });
   }
 
   function addHistoryEntry(title, url) {
@@ -1686,7 +2077,7 @@
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
-        <div class="item-icon">${escapeHtml(h.icon)}</div>
+        <div class="item-icon">${h.icon}</div>
         <div class="item-main">
           <div class="item-title">${escapeHtml(h.title)}</div>
           <div class="item-sub">${escapeHtml(h.time)}</div>
@@ -1704,7 +2095,7 @@
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
-        <div class="item-icon">${escapeHtml(b.icon)}</div>
+        <div class="item-icon">${b.icon}</div>
         <div class="item-main">
           <div class="item-title">${escapeHtml(b.title)}</div>
           <div class="item-sub">${escapeHtml(b.url)}</div>
@@ -1725,7 +2116,7 @@
       item.style.alignItems = 'stretch';
       item.innerHTML = `
         <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div class="item-icon">${escapeHtml(d.icon)}</div>
+          <div class="item-icon">${d.icon}</div>
           <div class="item-main">
             <div class="item-title">${escapeHtml(d.name)}</div>
             <div class="item-sub">${escapeHtml(d.size)} · ${d.pct < 100 ? `${d.pct}%` : 'Done'}</div>
@@ -1773,12 +2164,24 @@
       .replaceAll("'", '&#39;');
   }
 
-  function bindUI() {
-    el('sidebarToggle').addEventListener('click', () => {
-      const sidebar = qs('.sidebar');
-      sidebar.classList.toggle('collapsed');
-      el('sidebarToggle').style.transform = sidebar.classList.contains('collapsed') ? 'rotate(180deg)' : 'rotate(0deg)';
+  function renderSpaces() {
+    const wrap = el('spaceList');
+    wrap.innerHTML = '';
+    state.spaces.forEach((space, i) => {
+        const item = document.createElement('div');
+        item.className = `space-item ${state.activeSpace === i ? 'active' : ''}`;
+        item.style.setProperty('--space-color', space.color);
+        item.innerHTML = space.icon;
+        item.title = space.name;
+        item.onclick = () => {
+            switchSpace(i);
+            renderSpaces();
+        };
+        wrap.appendChild(item);
     });
+  }
+
+  function bindUI() {
 
     el('backBtn').addEventListener('click', goBack);
     el('forwardBtn').addEventListener('click', goForward);
@@ -1791,8 +2194,45 @@
     });
     el('btnMin').addEventListener('click', () => toast('Minimize action mocked in UI demo', 'info'));
     el('btnClose').addEventListener('click', () => toast('Close action mocked in UI demo', 'warn'));
+
+    el('btnPaletteAction').onclick = openPalette;
+    el('btnNewTabAction').onclick = () => addTab();
+    el('btnNotesAction').onclick = () => openPanel('notes');
     el('omnibox').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') navigate(e.target.value);
+    });
+
+    paletteInput.addEventListener('input', () => {
+        paletteIndex = 0;
+        renderPaletteResults();
+    });
+
+    paletteInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            paletteIndex = (paletteIndex + 1) % paletteItems.length;
+            renderPaletteResults();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            paletteIndex = (paletteIndex - 1 + paletteItems.length) % paletteItems.length;
+            renderPaletteResults();
+        } else if (e.key === 'Enter') {
+            if (paletteItems[paletteIndex]) paletteItems[paletteIndex].action();
+        } else if (e.key === 'Escape') {
+            closePalette();
+        }
+    });
+
+    paletteOverlay.addEventListener('click', (e) => {
+        if (e.target === paletteOverlay) closePalette();
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            if (state.palette) closePalette();
+            else openPalette();
+        }
     });
     el('heroSearch').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') navigate(e.target.value);
@@ -1815,6 +2255,7 @@
       }
     }));
     qsa('[data-close-panel]').forEach(btn => btn.addEventListener('click', closePanel));
+    el('panelOverlay').addEventListener('click', closePanel);
     qsa('.toggle').forEach(btn => btn.addEventListener('click', () => toggleSwitch(btn)));
     qsa('.engine').forEach(btn => btn.addEventListener('click', () => {
       qsa('.engine').forEach(b => b.classList.remove('selected'));
@@ -1830,7 +2271,8 @@
 
   function init() {
     setTheme('light');
-    state.tabs.push(createTab('New Tab'));
+    getSpace().tabs.push(createTab('New Tab'));
+    renderSpaces();
     renderTabs();
     renderHistory();
     renderBookmarks();
