@@ -1470,6 +1470,7 @@
     document.documentElement.setAttribute('data-theme', next);
     el('themeBtn').textContent = themeLabels[next];
     el('themeLabel').textContent = themeLabels[next];
+    localStorage.setItem('vectisx_theme', next);
     toast(`Theme set to ${themeLabels[next]}`, 'good');
   }
 
@@ -1829,7 +1830,8 @@
   }
 
   function init() {
-    setTheme('light');
+    const savedTheme = localStorage.getItem('vectisx_theme');
+    setTheme(themes.includes(savedTheme) ? savedTheme : 'light');
     state.tabs.push(createTab('New Tab'));
     renderTabs();
     renderHistory();
