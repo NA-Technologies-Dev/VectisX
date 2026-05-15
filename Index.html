@@ -1682,6 +1682,7 @@
   function renderHistory() {
     const wrap = el('historyList');
     wrap.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     state.history.forEach(h => {
       const item = document.createElement('div');
       item.className = 'item';
@@ -1693,8 +1694,9 @@
         </div>
       `;
       item.addEventListener('click', () => navigate(h.url));
-      wrap.appendChild(item);
+      fragment.appendChild(item);
     });
+    wrap.appendChild(fragment);
   }
 
   function renderBookmarks() {
